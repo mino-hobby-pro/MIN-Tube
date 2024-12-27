@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube動画埋め込み</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        iframe {
+            margin-top: 20px;
+            width: 560px;
+            height: 315px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+<h1>YouTube動画を埋め込む</h1>
+<p>動画IDを入力してください:</p>
+<input type="text" id="videoId" placeholder="動画IDを入力">
+<button onclick="embedVideo()">動画を表示</button>
+
+<div id="videoContainer"></div>
+
+<script>
+    function embedVideo() {
+        const videoId = document.getElementById('videoId').value;
+        const videoContainer = document.getElementById('videoContainer');
+        
+        if(videoId) {
+            videoContainer.innerHTML = `
+                <iframe src="https://youtube-nocookie.com/embed/${videoId}" 
+                        allowfullscreen></iframe>
+            `;
+        } else {
+            videoContainer.innerHTML = '<p>動画IDを入力してください。</p>';
+        }
+    }
+</script>
+
+</body>
+</html>
