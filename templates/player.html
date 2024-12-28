@@ -7,34 +7,37 @@
 </head>
 <body>
     <h1>動画プレーヤー</h1>
-    <input type="text" id="video_id" placeholder="動画IDを入力">
-    <button id="fetch_video">動画を取得</button>
-    
-    <h2 id="title"></h2>
-    <img id="thumbnail" style="max-width: 300px;">
-    <video id="video_player" controls style="display: none; max-width: 600px;">
-        <source id="video_source" src="" type="video/mp4">
-        お使いのブラウザは動画プレーヤーに対応していません。
-    </video>
-
+    <form id="videoForm">
+        <input type="text" id="videoId" placeholder="動画IDを入力" required>
+        <button type="submit">再生</button>
+    </form>
+    <div id="videoInfo"></div>
     <script>
-        document.getElementById('fetch_video').onclick = function() {
-            const videoId = document.getElementById('video_id').value;
-            fetch(`/fetch_video?video_id=${videoId}`)
+        document.getElementById('videoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const videoId = document.getElementById('videoId').value;
+            fetch(`/api/get_video_info?video_id=${videoId}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
-                        alert(data.error);
+                        document.getElementById('videoInfo').innerHTML = `<p>${data.error}</p>`;
                     } else {
-                        document.getElementById('title').innerText = data.title;
-                        document.getElementById('thumbnail').src = data.thumbnail;
-                        document.getElementById('video_source').src = data.stream_url;
-                        document.getElementById('video_player').style.display = 'block';
-                        document.getElementById('video_player').load();
+                        const videoHtml = `
+                            <h2>${data.title}</h2>
+                            <img src="${data.thumbnail}" alt="${data.title}">
+                            <p>${data.description}</p>
+                            <video controls>
+                                <source src="${data.stream_url}" type="video/mp4">
+                                お使いのブラウザは動画タグに対応していません。
+                            </video>
+                        `;
+                        document.getElementById('videoInfo').innerHTML = videoHtml;
                     }
                 })
-                .catch(error => alert('エラーが発生しました: ' + error.message));
-        };
+                .catch(error => {
+                    document.getElementById('videoInfo').innerHTML = `<p>エラーが発生しました: ${error}</p>`;
+                });
+        });
     </script>
 </body>
 </html>
