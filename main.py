@@ -12,11 +12,9 @@ class InvidiousAPI:
     def __init__(self):
         self.all = ast.literal_eval(requests.get('https://raw.githubusercontent.com/LunaKamituki/yukiyoutube-inv-instances/refs/heads/main/main.txt').text)
         self.video = self.all['video']
-
+    
     def info(self):
-        return {
-            'API': self.all,
-        }
+        return {'API': self.all}
 
 invidious_api = InvidiousAPI()
 
@@ -30,7 +28,7 @@ def getRandomUserAgent():
 
 @app.route('/')
 def index():
-    return render_template('player.html')
+    return render_template('index.html')
 
 @app.route('/api/fetch', methods=['GET'])
 def fetch_html():
@@ -45,16 +43,25 @@ def fetch_html():
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # 必要な情報を抽出
         title = soup.find('meta', property='og:title')['content']
+        description = soup.find('meta', property='og:description')['content']
+        thumbnail = soup.find('meta', property='og:image')['content']
+        view_count = soup.find('p', id='views').text.strip()
         stream_url = soup.find('meta', property='og:video')['content']
 
-        # ストリームURLが指定の形式の場合は修正
         if stream_url.startswith('/videoplayback'):
             host = stream_url.split('&host=')[-1]
             stream_url = f'https://{host}{stream_url.split("&host=")[0]}'
 
-        return jsonify({'title': title, 'stream_url': stream_url})
+        video_data = {
+            'title': title,
+            'description': description,
+            'thumbnail': thumbnail,
+            'view_count': view_count,
+            'stream_url': stream_url
+        }
+
+        return jsonify(video_data)
     
     except requests.exceptions.RequestException:
         return jsonify({'error': '情報の取得に失敗しました。'}), 500
