@@ -1,18 +1,11 @@
 from flask import Flask, request, render_template, jsonify
 import requests
-from bs4 import BeautifulSoup
-import os
 import urllib.parse
 import random
 
 app = Flask(__name__)
 
-class InvidiousAPI:
-    def __init__(self):
-        self.all = requests.get('https://raw.githubusercontent.com/LunaKamituki/yukiyoutube-inv-instances/refs/heads/main/main.txt').json()
-        self.video = self.all['video']
-
-invidious_api = InvidiousAPI()
+API_URL = "https://sure-helsa-mino-hobby-1e3b2fbf.koyeb.app/api/fetch"
 
 def getRandomUserAgent():
     user_agents = [
@@ -24,61 +17,21 @@ def getRandomUserAgent():
 
 @app.route('/')
 def index():
-    return render_template('player.html')
+    video_id = request.args.get('video_id')
+    return render_template('player.html', video_id=video_id) if video_id else render_template('player.html')
 
-@app.route('/fetch_video', methods=['GET'])
-def fetch_video():
+@app.route('/api/get_video_info', methods=['GET'])
+def get_video_info():
     video_id = request.args.get('video_id')
     if not video_id:
         return jsonify({'error': 'ビデオIDパラメータが必要です'}), 400
 
-    url = f'https://inv.zzls.xyz/watch?v={video_id}'
-    
     try:
-        response = requests.get(url)
+        response = requests.get(f"{API_URL}?video_id={video_id}", headers={'User-Agent': getRandomUserAgent()})
         response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'html.parser')
-
-        # 必要な情報を抽出
-        title = soup.find('meta', property='og:title')['content']
-        thumbnail = soup.find('meta', property='og:image')['content']
-        stream_url = soup.find('meta', property='og:video')['content']
-
-        # ストリームURLが指定の形式の場合は修正
-        if stream_url.startswith('/videoplayback'):
-            host = stream_url.split('&host=')[-1]
-            stream_url = f'https://{host}{stream_url.split("&host=")[0]}'
-
-        video_data = {
-            'title': title,
-            'thumbnail': thumbnail,
-            'stream_url': stream_url
-        }
-        return jsonify(video_data)
-    
+        return jsonify(response.json())
     except requests.exceptions.RequestException:
-        return fetch_from_invidious(video_id)
-    except Exception as e:
         return jsonify({'error': '情報の取得に失敗しました。'}), 500
-
-def fetch_from_invidious(video_id):
-    api_urls = invidious_api.video
-    path = f"/videos/{urllib.parse.quote(video_id)}"
-    
-    for api in api_urls:
-        try:
-            res = requests.get(api + path, headers={'User-Agent': getRandomUserAgent()})
-            if res.status_code == 200:
-                data = res.json()
-                return jsonify({
-                    'title': data['title'],
-                    'thumbnail': data['thumbnail'],
-                    'stream_url': data['formatStreams'][0]['url']
-                })
-        except Exception as e:
-            continue
-
-    return jsonify({'error': '代替APIからの情報取得に失敗しました。'}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
