@@ -7,33 +7,33 @@
 </head>
 <body>
     <h1>動画プレーヤー</h1>
-    <input type="text" id="videoId" placeholder="ビデオIDを入力">
-    <button id="fetchBtn">動画を取得</button>
+    <input type="text" id="video_id" placeholder="動画IDを入力">
+    <button id="fetch_video">動画を取得</button>
     
-    <h2 id="videoTitle"></h2>
-    <video id="videoPlayer" width="640" height="360" controls>
-        <source id="videoSource" src="" type="video/mp4">
-        お使いのブラウザは動画タグに対応していません。
+    <h2 id="title"></h2>
+    <img id="thumbnail" style="max-width: 300px;">
+    <video id="video_player" controls style="display: none; max-width: 600px;">
+        <source id="video_source" src="" type="video/mp4">
+        お使いのブラウザは動画プレーヤーに対応していません。
     </video>
 
     <script>
-        document.getElementById('fetchBtn').onclick = function() {
-            const videoId = document.getElementById('videoId').value;
-            fetch(`/api/fetch?video_id=${videoId}`)
+        document.getElementById('fetch_video').onclick = function() {
+            const videoId = document.getElementById('video_id').value;
+            fetch(`/fetch_video?video_id=${videoId}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
                         alert(data.error);
                     } else {
-                        document.getElementById('videoTitle').innerText = data.title;
-                        document.getElementById('videoSource').src = data.stream_url;
-                        document.getElementById('videoPlayer').load();
+                        document.getElementById('title').innerText = data.title;
+                        document.getElementById('thumbnail').src = data.thumbnail;
+                        document.getElementById('video_source').src = data.stream_url;
+                        document.getElementById('video_player').style.display = 'block';
+                        document.getElementById('video_player').load();
                     }
                 })
-                .catch(error => {
-                    alert('エラーが発生しました。');
-                    console.error(error);
-                });
+                .catch(error => alert('エラーが発生しました: ' + error.message));
         };
     </script>
 </body>
