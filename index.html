@@ -4,54 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>動画プレーヤー</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-        }
-        video {
-            width: 80%;
-            max-width: 600px;
-            margin-top: 20px;
-        }
-    </style>
 </head>
 <body>
     <h1>動画プレーヤー</h1>
-    <input type="text" id="videoId" placeholder="動画IDを入力">
-    <button onclick="fetchVideo()">動画を取得</button>
+    <input type="text" id="videoId" placeholder="動画IDを入力してください">
+    <button onclick="fetchVideo()">再生</button>
 
-    <h2 id="videoTitle"></h2>
-    <p id="videoDescription"></p>
-    <img id="videoThumbnail" style="max-width: 100%;"/>
-
-    <video id="videoPlayer" controls style="display: none;">
-        <source id="videoSource" src="" type="video/mp4">
-        お使いのブラウザは動画タグをサポートしていません。
-    </video>
+    <h2 id="title"></h2>
+    <video id="videoPlayer" width="640" height="360" controls></video>
 
     <script>
         async function fetchVideo() {
             const videoId = document.getElementById('videoId').value;
-            const response = await fetch(`https://sure-helsa-mino-hobby-1e3b2fbf.koyeb.app/api/fetch?video_id=${videoId}`);
+            const response = await fetch(`/api/fetch?video_id=${videoId}`);
+            const data = await response.json();
 
-            if (response.ok) {
-                const data = await response.json();
-                document.getElementById('videoTitle').innerText = data.title;
-                document.getElementById('videoDescription').innerText = data.description;
-                document.getElementById('videoThumbnail').src = data.thumbnail;
-
+            if (data.stream_url) {
+                document.getElementById('title').innerText = data.title;
                 const videoPlayer = document.getElementById('videoPlayer');
-                const videoSource = document.getElementById('videoSource');
-                videoSource.src = data.stream_url; // ストリームURLを設定
-                videoPlayer.style.display = 'block'; // プレーヤーを表示
-                videoPlayer.load(); // 新しいソースを読み込む
-                videoPlayer.play(); // 自動再生
+                videoPlayer.src = data.stream_url;
+                videoPlayer.play();
             } else {
-                alert('動画情報の取得に失敗しました。');
+                alert('動画の取得に失敗しました。');
             }
         }
     </script>
 </body>
 </html>
+
