@@ -77,9 +77,34 @@ def fetch_from_invidious(video_id):
             continue
     return jsonify({'error': '代替APIからの情報取得に失敗しました。'}), 500
 
+@app.route('/api/get_stream', methods=['GET'])
+def get_stream():
+    video_id = request.args.get('video_id')
+    if not video_id:
+        return jsonify({'error': 'ビデオIDパラメータが必要です'}), 400
+
+    url = f'https://inv.zzls.xyz/watch?v={video_id}'
+    try:
+        response = requests.get(url, headers={'User-Agent': getRandomUserAgent()})
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        stream_url = soup.find('meta', property='og:video')['content']
+        
+        if stream_url.startswith('/videoplayback'):
+            host = stream_url.split('&host=')[-1]
+            stream_url = f'https://{host}{stream_url.split("&host=")[0]}'
+
+        return jsonify({'stream_url': stream_url})
+    except Exception as e:
+        return jsonify({'error': 'ストリームURLの取得に失敗しました。'}), 500
+
 @app.route('/')
 def index():
     return send_file('index.html')
+
+@app.route('/player/<video_id>')
+def player(video_id):
+    return send_file('player.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
