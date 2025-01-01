@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import requests
 from bs4 import BeautifulSoup
 import os
+import json
 import urllib.parse
 import ast
 import random
@@ -12,9 +13,10 @@ class InvidiousAPI:
     def __init__(self):
         self.all = ast.literal_eval(requests.get('https://raw.githubusercontent.com/LunaKamituki/yukiyoutube-inv-instances/refs/heads/main/main.txt').text)
         self.video = self.all['video']
+        self.check_video = False
 
     def info(self):
-        return {'API': self.all}
+        return {'API': self.all, 'checkVideo': self.check_video}
 
 invidious_api = InvidiousAPI()
 
@@ -33,22 +35,20 @@ def fetch_html():
         return jsonify({'error': 'ビデオIDパラメータが必要です'}), 400
 
     url = f'https://inv.zzls.xyz/watch?v={video_id}'
-    
     try:
         response = requests.get(url)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
-
         title = soup.find('meta', property='og:title')['content']
         description = soup.find('meta', property='og:description')['content']
         thumbnail = soup.find('meta', property='og:image')['content']
         view_count = soup.find('p', id='views').text.strip()
         stream_url = soup.find('meta', property='og:video')['content']
-
+        
         if stream_url.startswith('/videoplayback'):
             host = stream_url.split('&host=')[-1]
             stream_url = f'https://{host}{stream_url.split("&host=")[0]}'
-        
+
         video_data = {
             'title': title,
             'description': description,
@@ -56,9 +56,7 @@ def fetch_html():
             'view_count': view_count,
             'stream_url': stream_url
         }
-
         return jsonify(video_data)
-    
     except requests.exceptions.RequestException:
         return fetch_from_invidious(video_id)
     except Exception as e:
@@ -67,7 +65,6 @@ def fetch_html():
 def fetch_from_invidious(video_id):
     api_urls = invidious_api.video
     path = f"/videos/{urllib.parse.quote(video_id)}"
-    
     for api in api_urls:
         try:
             res = requests.get(api + path, headers={'User-Agent': getRandomUserAgent()})
@@ -82,7 +79,6 @@ def fetch_from_invidious(video_id):
                 })
         except Exception as e:
             continue
-
     return jsonify({'error': '代替APIからの情報取得に失敗しました。'}), 500
 
 if __name__ == '__main__':
