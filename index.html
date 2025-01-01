@@ -2,33 +2,27 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube Downloader</title>
-    <script>
-        async function fetchVideoInfo() {
-            const videoId = document.getElementById('videoId').value;
-            const response = await fetch(`/api/fetch?video_id=${videoId}`);
-            const data = await response.json();
-            if (data.error) {
-                alert(data.error);
-            } else {
-                document.getElementById('videoTitle').innerText = data.title;
-                document.getElementById('videoDescription').innerText = data.description;
-                document.getElementById('videoThumbnail').src = data.thumbnail;
-                document.getElementById('videoViewCount').innerText = data.view_count;
-                document.getElementById('downloadLink').href = data.stream_url;
-            }
-        }
-    </script>
 </head>
 <body>
     <h1>YouTube Downloader</h1>
-    <input type="text" id="videoId" placeholder="動画IDを入力">
-    <button onclick="fetchVideoInfo()">動画情報を取得</button>
-    <h2 id="videoTitle"></h2>
-    <img id="videoThumbnail" src="" alt="サムネイル">
-    <p id="videoDescription"></p>
-    <p id="videoViewCount"></p>
-    <a id="downloadLink" href="#" download>ダウンロード</a>
+    <form id="download-form">
+        <input type="text" id="video-id" placeholder="動画IDを入力してください" required>
+        <button type="submit">ダウンロード</button>
+    </form>
+    <div id="result"></div>
+    <script>
+        document.getElementById('download-form').onsubmit = async function(event) {
+            event.preventDefault();
+            const videoId = document.getElementById('video-id').value;
+            const response = await fetch(`/api/fetch?video_id=${videoId}`);
+            const data = await response.json();
+            if (data.error) {
+                document.getElementById('result').textContent = data.error;
+            } else {
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+            }
+        };
+    </script>
 </body>
 </html>
