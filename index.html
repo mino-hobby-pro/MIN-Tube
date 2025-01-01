@@ -3,26 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>YouTube Downloader</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .video-container {
-            text-align: center;
-        }
-        .thumbnail {
-            width: 100%;
-            max-width: 600px;
-        }
-        .title {
-            font-size: 24px;
-            margin: 10px 0;
-        }
-        .description {
-            font-size: 18px;
-            color: #555;
-        }
-    </style>
 </head>
 <body>
     <h1>YouTube Downloader</h1>
@@ -41,15 +21,10 @@
                 document.getElementById('result').textContent = data.error;
             } else {
                 document.getElementById('result').innerHTML = `
-                    <div class="video-container">
-                        <img src="${data.thumbnail}" alt="${data.title}" class="thumbnail">
-                        <div class="title">${data.title}</div>
-                        <div class="description">${data.description}</div>
-                        <video controls>
-                            <source src="${data.stream_url}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
+                    <p>タイトル: ${data.title}</p>
+                    <p>説明: ${data.description}</p>
+                    <p>視聴回数: ${data.view_count}</p>
+                    <p><a href="/player/${videoId}?video_id=${videoId}">ビデオを再生</a></p>
                 `;
             }
         };
