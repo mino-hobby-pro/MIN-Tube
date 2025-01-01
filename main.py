@@ -102,7 +102,7 @@ def get_stream():
 def index():
     return send_file('index.html')
 
-@app.route('/player/<video_id>')
+@app.route('/player/<video_id>/stream/type=mp4/key=31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938/with?/request?gets?-server1/demo')
 def player(video_id):
     return send_file('player.html')
 
