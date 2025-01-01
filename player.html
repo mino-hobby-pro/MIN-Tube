@@ -3,10 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Video Player</title>
+    <style>
+        /* ビデオプレーヤーのスタイル */
+        #video-player {
+            width: 100%;
+            max-width: 600px;
+            height: 100%; /* 高さを100%に設定 */
+            object-fit: cover; /* 親要素に合わせてビデオを調整 */
+        }
+    </style>
 </head>
 <body>
     <h1>Video Player</h1>
-    <video id="video-player" controls style="width:100%; max-width:600px;">
+    <video id="video-player" controls>
         <source id="video-source" src="" type="video/mp4">
         お使いのブラウザは video タグをサポートしていません。
     </video>
