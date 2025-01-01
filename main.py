@@ -1,22 +1,17 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import requests
 from bs4 import BeautifulSoup
 import os
-import json
+import random
 import urllib.parse
 import ast
-import random
 
 app = Flask(__name__)
 
 class InvidiousAPI:
     def __init__(self):
-        self.all = ast.literal_eval(requests.get('https://raw.githubusercontent.com/LunaKamituki/yukiyoutube-inv-instances/refs/heads/main/main.txt').text)
+        self.all = ast.literal_eval(requests.get('https://raw.githubusercontent.com/LunaKamituki/yukiyoutube-inv-instances/main/main.txt').text)
         self.video = self.all['video']
-        self.check_video = False
-
-    def info(self):
-        return {'API': self.all, 'checkVideo': self.check_video}
 
 invidious_api = InvidiousAPI()
 
@@ -36,9 +31,10 @@ def fetch_html():
 
     url = f'https://inv.zzls.xyz/watch?v={video_id}'
     try:
-        response = requests.get(url)
+        response = requests.get(url, headers={'User-Agent': getRandomUserAgent()})
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
+
         title = soup.find('meta', property='og:title')['content']
         description = soup.find('meta', property='og:description')['content']
         thumbnail = soup.find('meta', property='og:image')['content']
@@ -80,6 +76,10 @@ def fetch_from_invidious(video_id):
         except Exception as e:
             continue
     return jsonify({'error': '代替APIからの情報取得に失敗しました。'}), 500
+
+@app.route('/')
+def index():
+    return send_file('index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
