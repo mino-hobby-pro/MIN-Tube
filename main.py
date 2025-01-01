@@ -1,6 +1,7 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, send_file
 import requests
 from bs4 import BeautifulSoup
+import os
 import random
 import urllib.parse
 import ast
@@ -21,10 +22,6 @@ def getRandomUserAgent():
         "Mozilla/5.0 (Linux; Android 10; Pixel 3 XL) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Mobile Safari/537.36"
     ]
     return random.choice(user_agents)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
 
 @app.route('/api/fetch', methods=['GET'])
 def fetch_html():
@@ -79,6 +76,10 @@ def fetch_from_invidious(video_id):
         except Exception as e:
             continue
     return jsonify({'error': '代替APIからの情報取得に失敗しました。'}), 500
+
+@app.route('/')
+def index():
+    return send_file('index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
