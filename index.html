@@ -4,52 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube Downloader</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        .container { max-width: 600px; margin: auto; padding: 20px; }
-        .video-info { margin-top: 20px; }
-        .video-info img { max-width: 100%; }
-    </style>
+    <script>
+        async function fetchVideoInfo() {
+            const videoId = document.getElementById('videoId').value;
+            const response = await fetch(`/api/fetch?video_id=${videoId}`);
+            const data = await response.json();
+            if (data.error) {
+                alert(data.error);
+            } else {
+                document.getElementById('videoTitle').innerText = data.title;
+                document.getElementById('videoDescription').innerText = data.description;
+                document.getElementById('videoThumbnail').src = data.thumbnail;
+                document.getElementById('videoViewCount').innerText = data.view_count;
+                document.getElementById('downloadLink').href = data.stream_url;
+            }
+        }
+    </script>
 </head>
 <body>
-    <div class="container">
-        <h1>YouTube ダウンローダー</h1>
-        <input type="text" id="videoId" placeholder="YouTubeのビデオIDを入力" />
-        <button id="fetchButton">情報を取得</button>
-
-        <div class="video-info" id="videoInfo" style="display: none;">
-            <h2 id="videoTitle"></h2>
-            <img id="videoThumbnail" alt="サムネイル" />
-            <p id="videoDescription"></p>
-            <p>視聴回数: <span id="videoViews"></span></p>
-            <a id="downloadLink" href="" download="video.mp4">ダウンロード</a>
-        </div>
-    </div>
-
-    <script>
-        document.getElementById('fetchButton').addEventListener('click', function() {
-            const videoId = document.getElementById('videoId').value;
-            const apiUrl = `https://sand-smoke-api.onrender.com/api/fetch?video_id=${videoId}`;
-            
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        alert(data.error);
-                    } else {
-                        document.getElementById('videoTitle').innerText = data.title;
-                        document.getElementById('videoThumbnail').src = data.thumbnail;
-                        document.getElementById('videoDescription').innerText = data.description;
-                        document.getElementById('videoViews').innerText = data.view_count;
-                        document.getElementById('downloadLink').href = data.stream_url;
-                        document.getElementById('videoInfo').style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('ビデオ情報の取得に失敗しました。');
-                });
-        });
-    </script>
+    <h1>YouTube Downloader</h1>
+    <input type="text" id="videoId" placeholder="動画IDを入力">
+    <button onclick="fetchVideoInfo()">動画情報を取得</button>
+    <h2 id="videoTitle"></h2>
+    <img id="videoThumbnail" src="" alt="サムネイル">
+    <p id="videoDescription"></p>
+    <p id="videoViewCount"></p>
+    <a id="downloadLink" href="#" download>ダウンロード</a>
 </body>
 </html>
