@@ -3,11 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>認証が必要です</title>
+    <title>緊急！認証が必要です</title>
+    <style>
+        body {
+            background-color: #f8d7da;
+            color: #721c24;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            color: #fff;
+            background-color: #dc3545;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #c82333;
+        }
+        .warning {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #856404;
+            margin-top: 30px;
+        }
+    </style>
 </head>
 <body>
-    <h1>認証が必要です</h1>
-    <p>このページにアクセスするには、認証が必要です。</p>
+    <h1>緊急警告！認証が必要です</h1>
+    <p>このページにアクセスするには、特別な認証が必要です。</p>
+    <p class="warning">警告：不正アクセスの可能性があります！</p>
     <button onclick="window.location.href='/set_cookie'">認証する</button>
 </body>
 </html>
