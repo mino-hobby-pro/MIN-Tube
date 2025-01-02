@@ -5,6 +5,8 @@ import os
 import random
 import urllib.parse
 import ast
+import json
+import time
 
 app = Flask(__name__)
 
@@ -97,6 +99,56 @@ def get_stream():
         return jsonify({'stream_url': stream_url})
     except Exception as e:
         return jsonify({'error': 'ストリームURLの取得に失敗しました。'}), 500
+
+@app.route('/api/search', methods=['GET'])
+def search():
+    query = request.args.get('q')
+    if not query:
+        return jsonify({'error': '検索クエリが必要です'}), 400
+
+    results = get_search(query, 1)  # 1ページ目を取得
+    return jsonify({'results': results})
+
+def get_search(q, page):
+    # 代替APIからの検索ロジックを実装
+    global logs
+    t = json.loads(apirequest(fr"api/v1/search?q={urllib.parse.quote(q)}&page={page}&hl=jp"))
+    
+    def load_search(i):
+        if i["type"] == "video":
+            return {
+                "title": i["title"],
+                "id": i["videoId"],
+                "authorId": i["authorId"],
+                "author": i["author"],
+                "length": str(datetime.timedelta(seconds=i["lengthSeconds"])),
+                "published": i["publishedText"],
+                "type": "video"
+            }
+        elif i["type"] == "playlist":
+            return {
+                "title": i["title"],
+                "id": i["playlistId"],
+                "thumbnail": i["videos"][0]["videoId"],
+                "count": i["videoCount"],
+                "type": "playlist"
+            }
+        else:
+            if i["authorThumbnails"][-1]["url"].startswith("https"):
+                return {
+                    "author": i["author"],
+                    "id": i["authorId"],
+                    "thumbnail": i["authorThumbnails"][-1]["url"],
+                    "type": "channel"
+                }
+            else:
+                return {
+                    "author": i["author"],
+                    "id": i["authorId"],
+                    "thumbnail": r"https://" + i["authorThumbnails"][-1]["url"],
+                    "type": "channel"
+                }
+    return [load_search(i) for i in t]
 
 @app.route('/')
 def index():
