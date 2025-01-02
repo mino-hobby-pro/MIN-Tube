@@ -22,19 +22,33 @@
         const urlParams = new URLSearchParams(window.location.search);
         const videoId = urlParams.get('video_id');
 
-        fetch(`/api/get_stream?video_id=${videoId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.stream_url) {
-                    document.getElementById('video-source').src = data.stream_url;
-                    document.getElementById('video-player').load();
-                } else {
-                    alert(data.error || 'ストリームURLの取得に失敗しました。');
-                }
-            })
-            .catch(error => {
-                console.error('エラー:', error);
-            });
+        function fetchStreamUrl() {
+            fetch(`/api/get_stream?video_id=${videoId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.stream_url) {
+                        document.getElementById('video-source').src = data.stream_url;
+                        document.getElementById('video-player').load();
+                    } else {
+                        alert(data.error || 'ストリームURLの取得に失敗しました。リロードします。');
+                        // ページをリロード
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2000); // 2秒後にリロード
+                    }
+                })
+                .catch(error => {
+                    console.error('エラー:', error);
+                    alert('エラーが発生しました。リロードします。');
+                    // ページをリロード
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000); // 2秒後にリロード
+                });
+        }
+
+        // 初回の取得を実行
+        fetchStreamUrl();
     </script>
 </body>
 </html>
