@@ -8,28 +8,29 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #121212;
+            color: #ffffff;
         }
 
         .container {
             max-width: 800px;
             margin: 20px auto;
             padding: 20px;
-            background: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background: #1a1a1a;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             border-radius: 5px;
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            color: #ffffff;
         }
 
         .video {
             margin: 15px 0;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #333;
             padding: 10px 0;
         }
 
@@ -47,6 +48,7 @@
             display: none;
             text-align: center;
             margin: 20px 0;
+            color: #ffffff;
         }
 
         form {
@@ -58,9 +60,11 @@
         input[type="text"] {
             padding: 10px;
             margin-right: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid #444;
             border-radius: 5px;
             flex-grow: 1;
+            background: #333;
+            color: #ffffff;
         }
 
         button {
@@ -80,7 +84,6 @@
             margin-top: 20px;
         }
 
-        /* 新しいスタイル */
         .video-player {
             text-align: center;
             margin-bottom: 20px;
@@ -100,13 +103,13 @@
         .video-details h2 {
             font-size: 24px;
             margin: 0;
+            color: #ff6600;
         }
 
         .video-details p {
             margin: 5px 0;
         }
 
-        /* ローディングアニメーションのスタイル */
         .loader {
             display: none;
             position: fixed;
@@ -114,7 +117,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(0, 0, 0, 0.8);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -136,12 +139,39 @@
 
         .loader-text {
             font-size: 18px;
-            color: #333;
+            color: #ffffff;
             margin-top: 10px;
+        }
+
+        /* Navigation arrows */
+        .nav-arrows {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+        }
+
+        .arrow {
+            background: rgba(0, 0, 0, 0.7);
+            color: #ffffff;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .arrow:hover {
+            background: #ff6600;
         }
     </style>
 </head>
 <body>
+    <div class="nav-arrows">
+        <button class="arrow" id="prevButton">←</button>
+        <button class="arrow" id="nextButton">→</button>
+    </div>
+
     <div class="container" id="searchContainer">
         <h1>MIN-Tube</h1>
         <form id="searchForm">
@@ -164,7 +194,6 @@
         <div id="result" class="video-details"></div>
     </div>
 
-    <!-- ローディングオーバーレイ -->
     <div class="loader" id="loader">
         <div class="spinner"></div>
         <div class="loader-text">MIN-Tube is working...</div>
@@ -254,12 +283,10 @@
             event.preventDefault();
             const videoId = document.getElementById('video-id').value;
 
-            // ローディングを表示
             document.getElementById('loader').style.display = 'flex';
 
             const response = await fetch(`/api/fetch?video_id=${videoId}`);
             const data = await response.json();
-            // ローディングを非表示
             document.getElementById('loader').style.display = 'none';
 
             if (data.error) {
@@ -273,6 +300,21 @@
                 `;
             }
         };
+
+        // Navigation button functionality
+        document.getElementById('prevButton').addEventListener('click', function() {
+            // Logic to go back to the previous screen
+            if (document.getElementById('downloadContainer').style.display === 'block') {
+                document.getElementById('downloadContainer').style.display = 'none';
+                document.getElementById('searchContainer').style.display = 'block';
+            }
+        });
+
+        document.getElementById('nextButton').addEventListener('click', function() {
+            // Logic to go to the next screen (if applicable)
+            // Currently, this does not have a defined next screen
+            alert('次の画面は未実装です。');
+        });
     </script>
 </body>
 </html>
