@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>MIN-Tube</title>
     <style>
+        /* スタイルはそのままです */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -259,7 +260,8 @@
                         });
                         pageToken = data.nextPageToken || '';
                     } else {
-                        document.getElementById('results').innerHTML = '<p>結果が見つかりませんでした</p>';
+                        // 代替検索を行う
+                        fetchFromAlternativeAPI(searchText);
                     }
                 })
                 .catch(error => {
@@ -269,6 +271,37 @@
                     document.getElementById('searchButton').disabled = false;
                     document.getElementById('searchButton').style.backgroundColor = '#ff6600';
                     document.getElementById('results').innerHTML = '<p>エラーが発生しました。再試行してください。</p>';
+                });
+        }
+
+        function fetchFromAlternativeAPI(searchText) {
+            fetch(`/api/search?q=${encodeURIComponent(searchText)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.results) {
+                        data.results.forEach(video => {
+                            const videoElement = document.createElement('div');
+                            videoElement.className = 'video';
+                            videoElement.innerHTML = `
+                                <a href="javascript:void(0);" onclick="redirectToDownload('${video.id}')">
+                                    <img src="https://img.youtube.com/vi/${video.id}/default.jpg" alt="${video.title}" class="thumbnail">
+                                </a>
+                                <div class="info">
+                                    <h2>${video.title}</h2>
+                                    <p>${video.length}</p>
+                                    <p>公開日: ${video.published}</p>
+                                    <p>チャンネル: ${video.author}</p>
+                                </div>
+                            `;
+                            document.getElementById('results').appendChild(videoElement);
+                        });
+                    } else {
+                        document.getElementById('results').innerHTML = '<p>結果が見つかりませんでした</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('代替APIエラー:', error);
+                    document.getElementById('results').innerHTML = '<p>代替APIからの情報取得に失敗しました。</p>';
                 });
         }
 
