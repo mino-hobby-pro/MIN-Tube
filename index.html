@@ -2,16 +2,130 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>YouTube Downloader</title>
+    <title>P-Tube & YouTube Downloader</title>
+    <style>
+        .video {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .thumbnail {
+            width: 120px;
+            height: 90px;
+            margin-right: 10px;
+        }
+
+        .info {
+            flex-grow: 1;
+        }
+
+        #loading {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>YouTube Downloader</h1>
-    <form id="download-form">
-        <input type="text" id="video-id" placeholder="動画IDを入力してください" required>
-        <button type="submit">ダウンロード</button>
-    </form>
-    <div id="result"></div>
+    <div class="container">
+        <h1>P-Tube</h1>
+        <form id="searchForm">
+            <input type="text" id="searchText" placeholder="Search for videos" required>
+            <input type="number" id="maxResults" placeholder="Number of results per page (1-100)" min="1" max="100" value="5">
+            <button type="submit" id="searchButton">Search</button>
+        </form>
+        <div id="results"></div>
+        <div id="loading">Loading...</div>
+    </div>
+
+    <div>
+        <h1>YouTube Downloader</h1>
+        <form id="download-form">
+            <input type="text" id="video-id" placeholder="動画IDを入力してください" required>
+            <button type="submit">ダウンロード</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
     <script>
+        let pageToken = '';
+        let isLoading = false;
+
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            pageToken = '';
+            document.getElementById('results').innerHTML = '';
+            fetchResults();
+        });
+
+        window.addEventListener('scroll', function() {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !isLoading) {
+                fetchResults();
+            }
+        });
+
+        document.getElementById('searchText').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+            }
+        });
+
+        function fetchResults() {
+            isLoading = true;
+            const searchText = document.getElementById('searchText').value;
+            const maxResults = document.getElementById('maxResults').value;
+            const searchButton = document.getElementById('searchButton');
+
+            searchButton.disabled = true;
+            searchButton.style.backgroundColor = '#888';
+
+            document.getElementById('loading').style.display = 'block';
+
+            fetch(`https://script.google.com/macros/s/AKfycbzWc0hJTG9R0FzFYqsWHozGgwUTNcZK_5QptkngzKHQsPExpmYUuBH22W7ZuRWSh5g/exec?text=${encodeURIComponent(searchText)}&q=${encodeURIComponent(maxResults)}&pageToken=${encodeURIComponent(pageToken)}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('loading').style.display = 'none';
+                    isLoading = false;
+                    searchButton.disabled = false;
+                    searchButton.style.backgroundColor = '#ff6600';
+
+                    if (data.results) {
+                        data.results.forEach(video => {
+                            const videoElement = document.createElement('div');
+                            videoElement.className = 'video';
+                            videoElement.innerHTML = `
+                                <a href="javascript:void(0);" onclick="redirectToDownload('${video.videoId}')">
+                                    <img src="https://img.youtube.com/vi/${video.videoId}/default.jpg" alt="${video.title}" class="thumbnail">
+                                </a>
+                                <div class="info">
+                                    <h2>${video.title}</h2>
+                                    <p>${video.description}</p>
+                                    <p>Published: ${new Date(video.publishedAt).toLocaleDateString()}</p>
+                                    <p>Channel: ${video.channelTitle}</p>
+                                </div>
+                            `;
+                            document.getElementById('results').appendChild(videoElement);
+                        });
+                        pageToken = data.nextPageToken || '';
+                    } else {
+                        document.getElementById('results').innerHTML = '<p>No results found</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('loading').style.display = 'none';
+                    isLoading = false;
+                    searchButton.disabled = false;
+                    searchButton.style.backgroundColor = '#ff6600';
+                    document.getElementById('results').innerHTML = '<p>An error occurred. Please try again.</p>';
+                });
+        }
+
+        function redirectToDownload(videoId) {
+            document.getElementById('video-id').value = videoId;
+            document.getElementById('download-form').dispatchEvent(new Event('submit'));
+        }
+
         document.getElementById('download-form').onsubmit = async function(event) {
             event.preventDefault();
             const videoId = document.getElementById('video-id').value;
