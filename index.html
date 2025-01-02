@@ -206,61 +206,32 @@
             fetch(`https://script.google.com/macros/s/AKfycbzWc0hJTG9R0FzFYqsWHozGgwUTNcZK_5QptkngzKHQsPExpmYUuBH22W7ZuRWSh5g/exec?text=${encodeURIComponent(searchText)}&q=${encodeURIComponent(maxResults)}&pageToken=${encodeURIComponent(pageToken)}`)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.results) {
-                        displayResults(data.results);
-                    } else {
-                        // Google Apps Scriptがデータを提供できない場合、Invidiousを試みる
-                        fetchInvidiousResults(searchText);
-                    }
-                })
-                .catch(error => {
-                    console.error('エラー:', error);
                     document.getElementById('loading').style.display = 'none';
                     isLoading = false;
                     document.getElementById('searchButton').disabled = false;
                     document.getElementById('searchButton').style.backgroundColor = '#ff6600';
-                    document.getElementById('results').innerHTML = '<p>エラーが発生しました。再試行してください。</p>';
-                });
-        }
 
-        function fetchInvidiousResults(searchText) {
-            fetch(`https://inv.zzls.xyz/search?q=${encodeURIComponent(searchText)}`)
-                .then(response => response.text())
-                .then(html => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const videoElements = doc.querySelectorAll('.pure-u-1.pure-u-md-1-4');
-
-                    if (videoElements.length > 0) {
-                        videoElements.forEach(video => {
-                            const videoId = video.querySelector('a').href.split('v=')[1];
-                            const title = video.querySelector('.video-card-row a p').innerText;
-                            const description = ''; // Invidiousでは詳細が得られないため空にしておく
-                            const publishedDate = video.querySelector('.flex-left .video-data').innerText;
-                            const channel = video.querySelector('.flex-left a p').innerText;
-
+                    if (data.results) {
+                        data.results.forEach(video => {
                             const videoElement = document.createElement('div');
                             videoElement.className = 'video';
                             videoElement.innerHTML = `
-                                <a href="javascript:void(0);" onclick="redirectToDownload('${videoId}')">
-                                    <img src="https://img.youtube.com/vi/${videoId}/default.jpg" alt="${title}" class="thumbnail">
+                                <a href="javascript:void(0);" onclick="redirectToDownload('${video.videoId}')">
+                                    <img src="https://img.youtube.com/vi/${video.videoId}/default.jpg" alt="${video.title}" class="thumbnail">
                                 </a>
                                 <div class="info">
-                                    <h2>${title}</h2>
-                                    <p>${description}</p>
-                                    <p>公開日: ${publishedDate}</p>
-                                    <p>チャンネル: ${channel}</p>
+                                    <h2>${video.title}</h2>
+                                    <p>${video.description}</p>
+                                    <p>公開日: ${new Date(video.publishedAt).toLocaleDateString()}</p>
+                                    <p>チャンネル: ${video.channelTitle}</p>
                                 </div>
                             `;
                             document.getElementById('results').appendChild(videoElement);
                         });
+                        pageToken = data.nextPageToken || '';
                     } else {
                         document.getElementById('results').innerHTML = '<p>結果が見つかりませんでした</p>';
                     }
-                    isLoading = false;
-                    document.getElementById('loading').style.display = 'none';
-                    document.getElementById('searchButton').disabled = false;
-                    document.getElementById('searchButton').style.backgroundColor = '#ff6600';
                 })
                 .catch(error => {
                     console.error('エラー:', error);
@@ -270,26 +241,6 @@
                     document.getElementById('searchButton').style.backgroundColor = '#ff6600';
                     document.getElementById('results').innerHTML = '<p>エラーが発生しました。再試行してください。</p>';
                 });
-        }
-
-        function displayResults(results) {
-            results.forEach(video => {
-                const videoElement = document.createElement('div');
-                videoElement.className = 'video';
-                videoElement.innerHTML = `
-                    <a href="javascript:void(0);" onclick="redirectToDownload('${video.videoId}')">
-                        <img src="https://img.youtube.com/vi/${video.videoId}/default.jpg" alt="${video.title}" class="thumbnail">
-                    </a>
-                    <div class="info">
-                        <h2>${video.title}</h2>
-                        <p>${video.description}</p>
-                        <p>公開日: ${new Date(video.publishedAt).toLocaleDateString()}</p>
-                        <p>チャンネル: ${video.channelTitle}</p>
-                    </div>
-                `;
-                document.getElementById('results').appendChild(videoElement);
-            });
-            pageToken = results.nextPageToken || '';
         }
 
         function redirectToDownload(videoId) {
