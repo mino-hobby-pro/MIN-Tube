@@ -80,7 +80,6 @@
             margin-top: 20px;
         }
 
-        /* 新しいスタイル */
         .video-player {
             text-align: center;
             margin-bottom: 20px;
@@ -106,7 +105,6 @@
             margin: 5px 0;
         }
 
-        /* ローディングアニメーションのスタイル */
         .loader {
             display: none;
             position: fixed;
@@ -121,8 +119,8 @@
         }
 
         .loader .spinner {
-            border: 8px solid #f3f3f3; /* Light grey */
-            border-top: 8px solid #3498db; /* Blue */
+            border: 8px solid #f3f3f3; 
+            border-top: 8px solid #3498db; 
             border-radius: 50%;
             width: 60px;
             height: 60px;
@@ -164,7 +162,6 @@
         <div id="result" class="video-details"></div>
     </div>
 
-    <!-- ローディングオーバーレイ -->
     <div class="loader" id="loader">
         <div class="spinner"></div>
         <div class="loader-text">MIN-Tube is working...</div>
@@ -230,7 +227,7 @@
                         });
                         pageToken = data.nextPageToken || '';
                     } else {
-                        document.getElementById('results').innerHTML = '<p>結果が見つかりませんでした</p>';
+                        fallbackSearch(searchText);
                     }
                 })
                 .catch(error => {
@@ -239,6 +236,49 @@
                     isLoading = false;
                     document.getElementById('searchButton').disabled = false;
                     document.getElementById('searchButton').style.backgroundColor = '#ff6600';
+                    document.getElementById('results').innerHTML = '<p>エラーが発生しました。再試行してください。</p>';
+                });
+        }
+
+        function fallbackSearch(searchText) {
+            const invidiousUrl = `https://inv.zzls.xyz/search?q=${encodeURIComponent(searchText)}`;
+            fetch(invidiousUrl)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const videos = doc.querySelectorAll('.video');
+                    
+                    if (videos.length === 0) {
+                        document.getElementById('results').innerHTML = '<p>結果が見つかりませんでした</p>';
+                        return;
+                    }
+
+                    videos.forEach(video => {
+                        const videoId = video.dataset.videoId; // InvidiousからのID取得方法を調整する必要があるかも
+                        const title = video.querySelector('.title').textContent;
+                        const description = video.querySelector('.description').textContent;
+                        const publishedAt = video.querySelector('.published').textContent;
+                        const channelTitle = video.querySelector('.channel').textContent;
+
+                        const videoElement = document.createElement('div');
+                        videoElement.className = 'video';
+                        videoElement.innerHTML = `
+                            <a href="javascript:void(0);" onclick="redirectToDownload('${videoId}')">
+                                <img src="https://img.youtube.com/vi/${videoId}/default.jpg" alt="${title}" class="thumbnail">
+                            </a>
+                            <div class="info">
+                                <h2>${title}</h2>
+                                <p>${description}</p>
+                                <p>公開日: ${publishedAt}</p>
+                                <p>チャンネル: ${channelTitle}</p>
+                            </div>
+                        `;
+                        document.getElementById('results').appendChild(videoElement);
+                    });
+                })
+                .catch(error => {
+                    console.error('エラー:', error);
                     document.getElementById('results').innerHTML = '<p>エラーが発生しました。再試行してください。</p>';
                 });
         }
@@ -254,12 +294,11 @@
             event.preventDefault();
             const videoId = document.getElementById('video-id').value;
 
-            // ローディングを表示
             document.getElementById('loader').style.display = 'flex';
 
             const response = await fetch(`/api/fetch?video_id=${videoId}`);
             const data = await response.json();
-            // ローディングを非表示
+
             document.getElementById('loader').style.display = 'none';
 
             if (data.error) {
