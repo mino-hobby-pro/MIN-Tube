@@ -41,6 +41,12 @@
             background: #35424a;
             color: #ffffff;
         }
+        pre {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
     </style>
 </head>
 <body>
@@ -79,13 +85,12 @@
         <h3>
         ページについて
         </h3>
-        <p>  このページはmino_hobbyによって書かれました。偽装は何よりもめんどくさく楽しいWeb開発の手段です。あなたは何を望みますか？</p>
+        <p>このページはmino_hobbyによって書かれました。偽装は何よりもめんどくさく楽しいWeb開発の手段です。あなたは何を望みますか？</p>
         <h4>
             MIN-Tube
         </h4>
         <p>MIN-Tubeは私が作成した、YUKIやわかめTubeを基盤としない全く新しいサービスです。invidiousの進化版みたいなものです。</p>
-        <p>
-        私は約半年間これを作るためにFlaskを学びました,,,。ただYoutubeがみたい人（僕のことですね）専用のアプリケーションです。</p>
+        <p>私は約半年間これを作るためにFlaskを学びました,,,。ただYoutubeがみたい人（僕のことですね）専用のアプリケーションです。</p>
         <p>MIN-Tubeは動画の読み込み速度で言ったらどんなYoutube代替よりも早いです</p>
         <h5>
             どうやったMIN-Tubeを利用できますか？
@@ -93,10 +98,66 @@
         <p>このページはcookieを承諾していないから表示されています。↓のボタンを押せばMIN-Tubeに飛びます。</p>
        
         <h6>認証が必要です</h6>
-    <p>MINをチェック！！</p>
-    <button onclick="location.href='/set_cookie'">MIN-open</button>
-<h7>偽装ページの変え方</h7>
+        <p>MINをチェック！！</p>
+        <button onclick="location.href='/set_cookie'">MIN-open</button>
         
+        <h2>偽装ページの変え方</h2>
+        <p>偽装ページを作成するためには、HTMLとCSSを使って自由にデザインを変更することができます。以下に具体的な手順を示します。</p>
+
+        <h3>1. HTMLの基本構造を理解する</h3>
+        <p>まず、HTMLの基本的な構造を理解しましょう。HTMLは、ウェブページの内容を構成するためのマークアップ言語です。基本的なHTMLの構造は次のようになります。</p>
+        
+        <pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="ja"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;ページタイトル&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;見出し&lt;/h1&gt;
+    &lt;p&gt;ここに内容が入ります。&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+
+        <h3>2. CSSでスタイルを追加する</h3>
+        <p>次に、CSSを使用してページのスタイルを変更します。CSSは、HTML要素の見た目を制御するためのスタイルシート言語です。以下は、CSSの基本的な使い方を示す例です。</p>
+        
+        <pre>
+&lt;style&gt;
+    body {
+        background-color: #f0f0f0; /* 背景色を変更 */
+    }
+    h1 {
+        color: #35424a; /* 見出しの色を変更 */
+    }
+    p {
+        font-size: 16px; /* テキストのサイズを変更 */
+    }
+&lt;/style&gt;
+        </pre>
+
+        <h3>3. ページ内容のカスタマイズ</h3>
+        <p>自分のページに合わせて内容をカスタマイズしましょう。例えば、特定のテーマに合わせた内容を追加したり、パーソナライズした情報を掲載することが可能です。以下は、カスタマイズされた内容の例です。</p>
+        
+        <pre>
+&lt;h2&gt;私の趣味&lt;/h2&gt;
+&lt;p&gt;私は音楽を聴くことが大好きです。特に、ジャズやロックの曲が好きです。&lt;/p&gt;
+        </pre>
+
+        <h3>4. JavaScriptでインタラクティブな要素を追加</h3>
+        <p>ページにインタラクティブな要素を追加するには、JavaScriptを使用します。例えば、ボタンをクリックしたときにメッセージを表示する簡単なスクリプトは次のようになります。</p>
+        
+        <pre>
+&lt;button onclick="alert('こんにちは！')"&gt;クリックしてね！&lt;/button&gt;
+        </pre>
+
+        <h3>5. テストとデプロイ</h3>
+        <p>最後に、作成したページをテストして、正しく表示されることを確認します。問題がなければ、ウェブホスティングサービスを使用してページを公開しましょう。GitHub PagesやNetlifyなどを使うと、簡単にデプロイできます。</p>
+
+        <h3>まとめ</h3>
+        <p>偽装ページの作成は、あなたの創造力を発揮する素晴らしい機会です。HTML、CSS、JavaScriptを駆使して、個性的なページを作成してみてください。楽しんで学びながら、あなたのスキルを磨いていきましょう！</p>
     </div>
 
     <footer>
