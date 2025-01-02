@@ -2,12 +2,35 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>P-Tube & YouTube Downloader</title>
+    <title>MIN-Tube</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
         .video {
             margin: 15px 0;
             display: flex;
             align-items: center;
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
         }
 
         .thumbnail {
@@ -22,25 +45,58 @@
 
         #loading {
             display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            flex-grow: 1;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #ff6600;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background-color: #888;
+        }
+
+        #result {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>P-Tube</h1>
+        <h1>MIN-Tube</h1>
         <form id="searchForm">
-            <input type="text" id="searchText" placeholder="Search for videos" required>
-            <input type="number" id="maxResults" placeholder="Number of results per page (1-100)" min="1" max="100" value="5">
-            <button type="submit" id="searchButton">Search</button>
+            <input type="text" id="searchText" placeholder="動画を検索" required>
+            <input type="number" id="maxResults" placeholder="結果の最大数 (1-100)" min="1" max="100" value="5">
+            <button type="submit" id="searchButton">検索</button>
         </form>
-        <div id="results"></div>
         <div id="loading">Loading...</div>
+        <div id="results"></div>
     </div>
 
-    <div>
-        <h1>YouTube Downloader</h1>
+    <div class="container" id="downloadContainer" style="display: none;">
+        <h1>ダウンロード</h1>
         <form id="download-form">
-            <input type="text" id="video-id" placeholder="動画IDを入力してください" required>
+            <input type="text" id="video-id" placeholder="動画IDを入力してください" required readonly>
             <button type="submit">ダウンロード</button>
         </form>
         <div id="result"></div>
@@ -100,30 +156,31 @@
                                 <div class="info">
                                     <h2>${video.title}</h2>
                                     <p>${video.description}</p>
-                                    <p>Published: ${new Date(video.publishedAt).toLocaleDateString()}</p>
-                                    <p>Channel: ${video.channelTitle}</p>
+                                    <p>公開日: ${new Date(video.publishedAt).toLocaleDateString()}</p>
+                                    <p>チャンネル: ${video.channelTitle}</p>
                                 </div>
                             `;
                             document.getElementById('results').appendChild(videoElement);
                         });
                         pageToken = data.nextPageToken || '';
                     } else {
-                        document.getElementById('results').innerHTML = '<p>No results found</p>';
+                        document.getElementById('results').innerHTML = '<p>結果が見つかりませんでした</p>';
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.error('エラー:', error);
                     document.getElementById('loading').style.display = 'none';
                     isLoading = false;
                     searchButton.disabled = false;
                     searchButton.style.backgroundColor = '#ff6600';
-                    document.getElementById('results').innerHTML = '<p>An error occurred. Please try again.</p>';
+                    document.getElementById('results').innerHTML = '<p>エラーが発生しました。再試行してください。</p>';
                 });
         }
 
         function redirectToDownload(videoId) {
             document.getElementById('video-id').value = videoId;
-            document.getElementById('download-form').dispatchEvent(new Event('submit'));
+            document.getElementById('downloadContainer').style.display = 'block';
+            document.getElementById('results').innerHTML = ''; // 検索結果をクリア
         }
 
         document.getElementById('download-form').onsubmit = async function(event) {
