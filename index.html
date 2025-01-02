@@ -105,6 +105,40 @@
         .video-details p {
             margin: 5px 0;
         }
+
+        /* ローディングアニメーションのスタイル */
+        .loader {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader .spinner {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            font-size: 18px;
+            color: #333;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -128,6 +162,12 @@
             <button type="submit">MIN-Tubeで視聴</button>
         </form>
         <div id="result" class="video-details"></div>
+    </div>
+
+    <!-- ローディングオーバーレイ -->
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <div class="loader-text">MIN-Tube is working...</div>
     </div>
 
     <script>
@@ -157,7 +197,7 @@
         function fetchResults() {
             isLoading = true;
             const searchText = document.getElementById('searchText').value;
-            const maxResults = 5; // 常に5個の結果を要求
+            const maxResults = 5;
 
             document.getElementById('searchButton').disabled = true;
             document.getElementById('searchButton').style.backgroundColor = '#888';
@@ -205,16 +245,23 @@
 
         function redirectToDownload(videoId) {
             document.getElementById('video-id').value = videoId;
-            document.getElementById('video-frame').src = `https://www.youtube-nocookie.com/embed/${videoId}`; // 埋め込みだよーーん
-            document.getElementById('searchContainer').style.display = 'none'; // 検索結果を隠す
-            document.getElementById('downloadContainer').style.display = 'block'; // ダウンロード画面を表示
+            document.getElementById('video-frame').src = `https://www.youtube-nocookie.com/embed/${videoId}`;
+            document.getElementById('searchContainer').style.display = 'none';
+            document.getElementById('downloadContainer').style.display = 'block';
         }
 
         document.getElementById('download-form').onsubmit = async function(event) {
             event.preventDefault();
             const videoId = document.getElementById('video-id').value;
+
+            // ローディングを表示
+            document.getElementById('loader').style.display = 'flex';
+
             const response = await fetch(`/api/fetch?video_id=${videoId}`);
             const data = await response.json();
+            // ローディングを非表示
+            document.getElementById('loader').style.display = 'none';
+
             if (data.error) {
                 document.getElementById('result').textContent = data.error;
             } else {
