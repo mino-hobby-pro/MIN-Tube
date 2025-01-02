@@ -3,49 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>緊急！認証が必要です</title>
+    <title>認証が必要です</title>
     <style>
         body {
-            background-color: #f8d7da;
-            color: #721c24;
-            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
             text-align: center;
             padding: 50px;
         }
+
         h1 {
-            font-size: 2.5em;
-            font-weight: bold;
-            margin-bottom: 20px;
+            font-size: 3em;
+            color: crimson;
+            text-shadow: 2px 2px 5px black;
         }
+
         p {
-            font-size: 1.2em;
-            margin-bottom: 30px;
+            font-size: 1.5em;
+            margin: 20px 0;
         }
+
         button {
-            padding: 15px 30px;
-            font-size: 1.2em;
-            color: #fff;
-            background-color: #dc3545;
+            background-color: crimson;
+            color: white;
             border: none;
-            border-radius: 5px;
+            padding: 15px 30px;
+            font-size: 1.5em;
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
         button:hover {
-            background-color: #c82333;
+            background-color: darkred;
         }
+
         .warning {
-            font-size: 1.4em;
-            font-weight: bold;
-            color: #856404;
+            font-size: 1.2em;
+            color: yellow;
             margin-top: 30px;
+            animation: flicker 1s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
     </style>
 </head>
 <body>
-    <h1>緊急警告！認証が必要です</h1>
-    <p>このページにアクセスするには、特別な認証が必要です。</p>
-    <p class="warning">警告：不正アクセスの可能性があります！</p>
+    <h1>認証が必要です</h1>
+    <p>このページにアクセスするには、認証が必要です。</p>
+    <p class="warning">警告: 不正なアクセスが検知されました...</p>
+    <p>あなたの情報が危険にさらされています！</p>
     <button onclick="window.location.href='/set_cookie'">認証する</button>
+    <p>認証しない場合、あなたのデータは失われる可能性があります！</p>
 </body>
 </html>
