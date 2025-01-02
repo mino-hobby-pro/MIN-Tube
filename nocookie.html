@@ -2,11 +2,14 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>認証が必要です</title>
 </head>
 <body>
     <h1>認証が必要です</h1>
     <p>このページにアクセスするには、認証が必要です。</p>
-    <button onclick="location.href='/set_cookie'">認証する</button>
+    <form action="/set_cookie" method="get">
+        <button type="submit">認証する</button>
+    </form>
 </body>
 </html>
