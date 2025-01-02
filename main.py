@@ -6,6 +6,7 @@ import random
 import urllib.parse
 import ast
 import json
+import time
 
 app = Flask(__name__)
 
@@ -78,29 +79,84 @@ def fetch_from_invidious(video_id):
             continue
     return jsonify({'error': '代替APIからの情報取得に失敗しました。'}), 500
 
+@app.route('/api/get_stream', methods=['GET'])
+def get_stream():
+    video_id = request.args.get('video_id')
+    if not video_id:
+        return jsonify({'error': 'ビデオIDパラメータが必要です'}), 400
+
+    url = f'https://inv.zzls.xyz/watch?v={video_id}'
+    try:
+        response = requests.get(url, headers={'User-Agent': getRandomUserAgent()})
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        stream_url = soup.find('meta', property='og:video')['content']
+        
+        if stream_url.startswith('/videoplayback'):
+            host = stream_url.split('&host=')[-1]
+            stream_url = f'https://{host}{stream_url.split("&host=")[0]}'
+
+        return jsonify({'stream_url': stream_url})
+    except Exception as e:
+        return jsonify({'error': 'ストリームURLの取得に失敗しました。'}), 500
+
 @app.route('/api/search', methods=['GET'])
 def search():
     query = request.args.get('q')
     if not query:
         return jsonify({'error': '検索クエリが必要です'}), 400
 
-    results = get_search(query)  # 1ページ目を取得
+    results = get_search(query, 1)  # 1ページ目を取得
     return jsonify({'results': results})
 
-def get_search(query):
-    api_url = f'https://inv.zzls.xyz/api/v1/search?q={urllib.parse.quote(query)}'
-    try:
-        response = requests.get(api_url, headers={'User-Agent': getRandomUserAgent()})
-        if response.status_code == 200:
-            return response.json()['results']
+def get_search(q, page):
+    # 代替APIからの検索ロジックを実装
+    global logs
+    t = json.loads(apirequest(fr"api/v1/search?q={urllib.parse.quote(q)}&page={page}&hl=jp"))
+    
+    def load_search(i):
+        if i["type"] == "video":
+            return {
+                "title": i["title"],
+                "id": i["videoId"],
+                "authorId": i["authorId"],
+                "author": i["author"],
+                "length": str(datetime.timedelta(seconds=i["lengthSeconds"])),
+                "published": i["publishedText"],
+                "type": "video"
+            }
+        elif i["type"] == "playlist":
+            return {
+                "title": i["title"],
+                "id": i["playlistId"],
+                "thumbnail": i["videos"][0]["videoId"],
+                "count": i["videoCount"],
+                "type": "playlist"
+            }
         else:
-            return []
-    except Exception as e:
-        return []
+            if i["authorThumbnails"][-1]["url"].startswith("https"):
+                return {
+                    "author": i["author"],
+                    "id": i["authorId"],
+                    "thumbnail": i["authorThumbnails"][-1]["url"],
+                    "type": "channel"
+                }
+            else:
+                return {
+                    "author": i["author"],
+                    "id": i["authorId"],
+                    "thumbnail": r"https://" + i["authorThumbnails"][-1]["url"],
+                    "type": "channel"
+                }
+    return [load_search(i) for i in t]
 
 @app.route('/')
 def index():
     return send_file('index.html')
+
+@app.route('/player/<video_id>')
+def player(video_id):
+    return send_file('player.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
