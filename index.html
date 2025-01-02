@@ -208,7 +208,7 @@
 
         function redirectToDownload(videoId) {
             document.getElementById('video-id').value = videoId;
-            document.getElementById('video-frame').src = `https://www.youtube.com/embed/${videoId}?autoplay=1`; // 自動再生を設定
+            document.getElementById('video-frame').src = `https://www.youtube-nocookie.com/embed/${videoId}`; // 埋め込みだよーーん
             document.getElementById('searchContainer').style.display = 'none'; // 検索結果を隠す
             document.getElementById('downloadContainer').style.display = 'block'; // ダウンロード画面を表示
         }
