@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file, redirect, make_response, render_template
+from flask import Flask, request, jsonify, send_file, redirect, url_for, make_response
 import requests
 from bs4 import BeautifulSoup
 import os
@@ -31,7 +31,7 @@ def check_authentication():
 @app.route('/api/fetch', methods=['GET'])
 def fetch_html():
     if not check_authentication():
-        return redirect('/nocookie')
+        return redirect(url_for('nocookie'))
 
     video_id = request.args.get('video_id')
     if not video_id:
@@ -88,7 +88,7 @@ def fetch_from_invidious(video_id):
 @app.route('/api/get_stream', methods=['GET'])
 def get_stream():
     if not check_authentication():
-        return redirect('/nocookie')
+        return redirect(url_for('nocookie'))
 
     video_id = request.args.get('video_id')
     if not video_id:
@@ -112,7 +112,7 @@ def get_stream():
 @app.route('/api/search', methods=['GET'])
 def search():
     if not check_authentication():
-        return redirect('/nocookie')
+        return redirect(url_for('nocookie'))
 
     query = request.args.get('q')
     if not query:
@@ -162,23 +162,25 @@ def get_search(q, page):
                 }
     return [load_search(i) for i in t]
 
-@app.route('/nocookie')
-def nocookie():
-    return send_file('nocookie.html')
-
-@app.route('/set_cookie')
-def set_cookie():
-    resp = make_response(redirect('/'))
-    resp.set_cookie('authenticated', 'true')
-    return resp
-
 @app.route('/')
 def index():
     return send_file('index.html')
 
 @app.route('/player/<video_id>')
 def player(video_id):
+    if not check_authentication():
+        return redirect(url_for('nocookie'))
     return send_file('player.html')
+
+@app.route('/nocookie')
+def nocookie():
+    return send_file('nocookie.html')
+
+@app.route('/set_cookie')
+def set_cookie():
+    resp = make_response(redirect(url_for('index')))
+    resp.set_cookie('authenticated', 'true')
+    return resp
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
