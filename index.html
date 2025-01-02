@@ -55,7 +55,7 @@
             margin-bottom: 20px;
         }
 
-        input[type="text"], input[type="number"] {
+        input[type="text"] {
             padding: 10px;
             margin-right: 10px;
             border: 1px solid #ccc;
@@ -112,7 +112,6 @@
         <h1>MIN-Tube</h1>
         <form id="searchForm">
             <input type="text" id="searchText" placeholder="動画を検索" required>
-            <input type="number" id="maxResults" placeholder="結果の最大数 (1-100)" min="1" max="100" value="5">
             <button type="submit" id="searchButton">検索</button>
         </form>
         <div id="loading">Loading...</div>
@@ -158,12 +157,10 @@
         function fetchResults() {
             isLoading = true;
             const searchText = document.getElementById('searchText').value;
-            const maxResults = document.getElementById('maxResults').value;
-            const searchButton = document.getElementById('searchButton');
+            const maxResults = 5; // 常に5個の結果を要求
 
-            searchButton.disabled = true;
-            searchButton.style.backgroundColor = '#888';
-
+            document.getElementById('searchButton').disabled = true;
+            document.getElementById('searchButton').style.backgroundColor = '#888';
             document.getElementById('loading').style.display = 'block';
 
             fetch(`https://script.google.com/macros/s/AKfycbzWc0hJTG9R0FzFYqsWHozGgwUTNcZK_5QptkngzKHQsPExpmYUuBH22W7ZuRWSh5g/exec?text=${encodeURIComponent(searchText)}&q=${encodeURIComponent(maxResults)}&pageToken=${encodeURIComponent(pageToken)}`)
@@ -171,8 +168,8 @@
                 .then(data => {
                     document.getElementById('loading').style.display = 'none';
                     isLoading = false;
-                    searchButton.disabled = false;
-                    searchButton.style.backgroundColor = '#ff6600';
+                    document.getElementById('searchButton').disabled = false;
+                    document.getElementById('searchButton').style.backgroundColor = '#ff6600';
 
                     if (data.results) {
                         data.results.forEach(video => {
@@ -200,8 +197,8 @@
                     console.error('エラー:', error);
                     document.getElementById('loading').style.display = 'none';
                     isLoading = false;
-                    searchButton.disabled = false;
-                    searchButton.style.backgroundColor = '#ff6600';
+                    document.getElementById('searchButton').disabled = false;
+                    document.getElementById('searchButton').style.backgroundColor = '#ff6600';
                     document.getElementById('results').innerHTML = '<p>エラーが発生しました。再試行してください。</p>';
                 });
         }
