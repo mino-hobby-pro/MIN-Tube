@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, redirect, make_response, render_template
 import requests
 from bs4 import BeautifulSoup
 import os
@@ -25,8 +25,14 @@ def getRandomUserAgent():
     ]
     return random.choice(user_agents)
 
+def check_authentication():
+    return request.cookies.get('authenticated') == 'true'
+
 @app.route('/api/fetch', methods=['GET'])
 def fetch_html():
+    if not check_authentication():
+        return redirect('/nocookie')
+
     video_id = request.args.get('video_id')
     if not video_id:
         return jsonify({'error': 'ビデオIDパラメータが必要です'}), 400
@@ -81,6 +87,9 @@ def fetch_from_invidious(video_id):
 
 @app.route('/api/get_stream', methods=['GET'])
 def get_stream():
+    if not check_authentication():
+        return redirect('/nocookie')
+
     video_id = request.args.get('video_id')
     if not video_id:
         return jsonify({'error': 'ビデオIDパラメータが必要です'}), 400
@@ -102,6 +111,9 @@ def get_stream():
 
 @app.route('/api/search', methods=['GET'])
 def search():
+    if not check_authentication():
+        return redirect('/nocookie')
+
     query = request.args.get('q')
     if not query:
         return jsonify({'error': '検索クエリが必要です'}), 400
@@ -149,6 +161,16 @@ def get_search(q, page):
                     "type": "channel"
                 }
     return [load_search(i) for i in t]
+
+@app.route('/nocookie')
+def nocookie():
+    return send_file('nocookie.html')
+
+@app.route('/set_cookie')
+def set_cookie():
+    resp = make_response(redirect('/'))
+    resp.set_cookie('authenticated', 'true')
+    return resp
 
 @app.route('/')
 def index():
