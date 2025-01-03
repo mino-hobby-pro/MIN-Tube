@@ -1,171 +1,498 @@
+
+
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
-    <title>QRコード作成【無料】URLをQRコードに</title>
-    <meta name="description" content="URLをそのままQRコードに変換します。Web・SNSへの集客や誘導、告知などに便利です。丸いデザインも選べて人気です。">
-    <link rel="stylesheet" href="https://43koke89.user.webaccel.jp/bootstrap/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f2f2f2;
-            font-family: Arial, sans-serif;
-            color: #333;
-        }
-        nav {
-            background-color: #008074;
-            padding: 15px;
-        }
-        nav a {
-            color: #fff;
-        }
-        .navbar-brand img {
-            height: 40px;
-        }
-        .container-fluid {
-            margin-top: 20px;
-        }
-        h1 {
-            color: #008074;
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
-        .panel {
-            background: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .panel-heading {
-            background-color: #e7f3fe;
-            border-bottom: 1px solid #ccc;
-            color: #333;
-        }
-        .btn-primary {
-            background-color: #008074;
-            border-color: #007268;
-        }
-        .form-control {
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        footer {
-            background-color: #008074;
-            color: #fff;
-            padding: 20px 0;
-            text-align: center;
-        }
-        .qr_share {
-            display: inline-block;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 5px;
-            color: #fff;
-            cursor: pointer;
-        }
-        .qr_share:hover {
-            opacity: 0.8;
-        }
-        .qr_share.facebook {
-            background-color: #3B5998;
-        }
-        .qr_share.line {
-            background-color: #00B300;
-        }
-        .qr_share.twitter {
-            background-color: #55ACEE;
-        }
-    </style>
-</head>
+    <title>TalkAI - ChatGPTと日本語で会話する。</title>
+    <meta name="csrf-param" content="_csrf-front">
+<meta name="csrf-token" content="hvTHsohlKNLDt5e4HfONhHhGMls6WFQ-z6yfHIvn5HrWpPXe4TBE4fL_9NN-o9XDIAR4Kns8ZkT-_M8l6rG8Fg==">
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="TalkAIでは、日本語のChatGPTを無料で使い放題で提供しています。こちらのサイトでは、制限や料金なしでチャットボットを利用することができます。登録や購読は必要ありません。">
+<link href="https://talkai.info/chat/" rel="alternate" hreflang="en">
+<link href="https://talkai.info/es/chat/" rel="alternate" hreflang="es">
+<link href="https://talkai.info/pt/chat/" rel="alternate" hreflang="pt">
+<link href="https://talkai.info/de/chat/" rel="alternate" hreflang="de">
+<link href="https://talkai.info/it/chat/" rel="alternate" hreflang="it">
+<link href="https://talkai.info/ru/chat/" rel="alternate" hreflang="ru">
+<link href="https://talkai.info/fr/chat/" rel="alternate" hreflang="fr">
+<link href="https://talkai.info/cs/chat/" rel="alternate" hreflang="cs">
+<link href="https://talkai.info/pl/chat/" rel="alternate" hreflang="pl">
+<link href="https://talkai.info/tr/chat/" rel="alternate" hreflang="tr">
+<link href="https://talkai.info/sv/chat/" rel="alternate" hreflang="sv">
+<link href="https://talkai.info/fi/chat/" rel="alternate" hreflang="fi">
+<link href="https://talkai.info/nl/chat/" rel="alternate" hreflang="nl">
+<link href="https://talkai.info/ro/chat/" rel="alternate" hreflang="ro">
+<link href="https://talkai.info/bg/chat/" rel="alternate" hreflang="bg">
+<link href="https://talkai.info/da/chat/" rel="alternate" hreflang="da">
+<link href="https://talkai.info/el/chat/" rel="alternate" hreflang="el">
+<link href="https://talkai.info/hu/chat/" rel="alternate" hreflang="hu">
+<link href="https://talkai.info/sk/chat/" rel="alternate" hreflang="sk">
+<link href="https://talkai.info/sl/chat/" rel="alternate" hreflang="sl">
+<link href="https://talkai.info/lv/chat/" rel="alternate" hreflang="lv">
+<link href="https://talkai.info/lt/chat/" rel="alternate" hreflang="lt">
+<link href="https://talkai.info/ca/chat/" rel="alternate" hreflang="ca">
+<link href="https://talkai.info/nb/chat/" rel="alternate" hreflang="nb">
+<link href="https://talkai.info/et/chat/" rel="alternate" hreflang="et">
+<link href="https://talkai.info/hr/chat/" rel="alternate" hreflang="hr">
+<link href="https://talkai.info/id/chat/" rel="alternate" hreflang="id">
+<link href="https://talkai.info/ko/chat/" rel="alternate" hreflang="ko">
+<link href="https://talkai.info/ja/chat/" rel="alternate" hreflang="ja">
+<link href="https://talkai.info/th/chat/" rel="alternate" hreflang="th">
+<link href="https://talkai.info/vi/chat/" rel="alternate" hreflang="vi">
+<link href="/assets/8999a7b1/css/ion.rangeSlider.min.css" rel="stylesheet">
+<link href="/assets/8999a7b1/css/swiper-bundle.min.css" rel="stylesheet">
+<link href="/assets/8999a7b1/css/style.css" rel="stylesheet">
+<link href="/assets/8999a7b1/css/custom.css" rel="stylesheet"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4633961832836601"
+     crossorigin="anonymous"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FB7V9WMN30"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-FB7V9WMN30');
+</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();
+   for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window, document, "script", "https://mc.webvisor.org/metrika/tag_ww.js", "ym");
+
+   ym(92988225, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true
+   });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/92988225" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=64235001d0e85900127dca22&product=sticky-share-buttons' async='async'></script></head>
 
 <body>
-
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="./">
-                    <img src="https://43koke89.user.webaccel.jp/images2/qr-susume4.png" alt="QRコード 作成"/>
-                </a>
-                <h1>QRコード作成サイト／無料版</h1>
-            </div>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        Language <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="https://qr-creator.com/">English</a></li>
-                        <li><a href="https://qr.quel.jp/">日本語</a></li>
-                    </ul>
-                </li>
-                <li><a href="search.php">サイト内検索</a></li>
-            </ul>
+<script>
+    window.chatIntl = JSON.parse('{\"newChat\":\"新しいチャット\",\"textareaPlaceholder\":\"ここで書き始める...\",\"sendButton\":\"Send\",\"you\":\"あなた\",\"copy\":\"コピー\",\"copied\":\"コピーされました\",\"wait\":\"お願いします、お待ちください...\",\"requestsLimit\":\"残り{1}回のリクエストのうち{0}回です。\",\"fix\":\"ピン\",\"rename\":\"名前変更\",\"delete\":\"削除\",\"choose\":\"選ぶ\",\"subscriptions\":\"TalkAI Premiumを試す\",\"aboutTariffs\":\"Premiumについて詳しくはこちら\",\"premiumChat\":\"https://premium.talkai.info/ja/chat/\",\"premiumLanding\":\"https://premium.talkai.info/ja/\",\"imageYouUrl\":\"/files/you.svg\",\"imageBotUrl\":\"/files/bot.svg\",\"likeUrl\":\"/files/like.svg\",\"billedMonthly\":\"毎月請求\",\"billedAnnually\":\"毎年請求\",\"billing\":\"請求\",\"monthly\":\"毎月\",\"yearly\":\"年間\",\"saveUp\":\"割引\",\"month\":\"月\",\"year\":\"年\",\"chatLimitTitle\":\"チャットの制限を超過\",\"chatLimitMessage\":\"チャット数の制限を超えました。新しいチャットを追加するには、既存のチャットを1つ以上削除する必要があります。\",\"attachButton\":\"ファイルまたは画像を添付します。Premiumで利用可能\",\"settings\":{\"settingsButton\":\"設定方法\",\"defaultButton\":\"デフォルト\",\"saveButton\":\"保存\",\"temperatureTitle\":\"温度\",\"temperatureDescription\":\"温度の値が低いほど一貫性のあるアウトプットになり（たとえばコードを書く場合）、高いほど多様で創造的なアウトプットになります（たとえば詩を書く場合）。あなたの特定のタスクのために、一貫性と創造性の間の望ましいトレードオフに基づいて温度値を選択します。\",\"topPTitle\":\"TOP P\",\"topPDescription\":\"核サンプリングを通じて多様性を制御します。 Top P 値を調整すると、より決定的な (低い値) からより多様で探索的な (高い値) まで、さまざまな応答を調査することができます。このオプションはTalkAI Premiumで利用できます。\",\"frequencyPenaltyTitle\":\"Frequency penalty\",\"frequencyPenaltyeDescription\":\"新しいトークンを、その時点までのテキストにおける既存の頻度に応じて、どの程度ペナルティーを科すか。モデルが同じ行を一語一語繰り返す傾向を減らす。頻度ペナルティを増やすことは、同じ単語を頻繁に使うなと言っているようなものだ。このオプションはTalkAI Premiumで利用できます。\",\"presencePenaltyTitle\":\"Presence penalty\",\"presencePenaltyeDescription\":\"新しいトークンにペナルティを与える度合い。モデルが新しいトピックについて議論する確率を高めます。存在ペナルティを増やすことは、ChatGPTに繰り返しのフレーズやアイデアを使わないように指示するようなものです。このオプションはTalkAI Premiumで利用できます。\",\"removeRestrictionsTitle\":\"制限の撤廃\",\"removeRestrictionsDescription\":\"Attention! By removing the limitations on settings, you gain access to a wider range of adjustments for the chatbot. Adjusting the values close to the maximum and minimum can significantly impact the quality of the chatbot\'s responses, up to the point of rendering them meaningless. To revert to the original settings, simply click the Default” button.\",\"modelChatTitle\":\"モデル\",\"modelChatDescription\":\"GPT-3.5 is fast, but rather old model. Limited to knowledge until 2021.\\n        GPT-4o is the most advanced and “smartest” model to day, but slower. Knowledge about the world is constantly updated. Available with TalkAI Premium.\\n        GPT-4o mini is a simplified version of GPT-4о with fewer parameters, not as smart, but works faster. Limited to knowledge until 2023.\",\"modelImageTitle\":\"モデル\",\"modelImageDescription\":\"DALL-E 2 is an old image generation model from OpenAI. DALL-E 3 is a new model capable of generating images of significantly better quality and higher resolution.\",\"resolutionTitle\":\"Resolution\",\"resolutionDescription\":\"Resolution of images that the neural network will generate.\",\"chatHistoryTitle\":\"Dialogue Memory\",\"chatHistoryDescription\":\"Enabling the \\\"Dialogue Memory\\\" option allows the chatbot to remember previous messages and replies in this chat and take previous context into account when communicating. Please keep in mind that enabling this option may result in quicker use of your word limit.\",\"numberOfMessagesTitle\":\"Messages in memory\",\"numberOfMessagesDescription\":\"The number of previous messages that the chatbot will remember. Increasing this value may result in your word limit being reached more quickly.\",\"fastModelsTitle\":\"高速モデル\",\"smartModelsTitle\":\"スマートモデル\",\"modelButton\":\"モデル\",\"models\":{\"dall-e-2\":{\"description\":\"Old image generation model from $blue{OpenAI}\",\"tooltip\":\"\"},\"dall-e-3\":{\"description\":\"New model from $blue{OpenAI} capable of generating high-quality and high-resolution images\",\"tooltip\":\"\"},\"gpt-3.5-turbo\":{\"description\":\"$blue{OpenAI} の古い実証済みモデル\",\"tooltip\":\"\"},\"gpt-4o-mini\":{\"description\":\"開発者: $blue{OpenAI}。質問に答えたり、さまざまなタスクを支援できる、リソース効率の高い高速モデル\",\"tooltip\":\"\"},\"gpt-4o\":{\"description\":\"開発者: $blue{OpenAI}。コーディングタスク、テキスト分析、論理的推論に最適化された高速モデル\",\"tooltip\":\"Premium で使用可能\"},\"gemini-1.5-pro\":{\"description\":\"開発者: $blue{Google}。数学と科学に精通した非常に知的なモデル\",\"tooltip\":\"Premium で使用可能\"},\"claude-3-5-sonnet\":{\"description\":\"開発者: $blue{Anthropic}。特にライティングとコーディングが得意な万能モデル\",\"tooltip\":\"Premium で使用可能\"},\"claude-3-haiku\":{\"description\":\"開発者: $blue{Anthropic}。ニュアンスのあるコンテンツの作成と有意義な会話のための最先端のモデル\",\"tooltip\":\"\"},\"gemini-1.5-flash-8b\":{\"description\":\"開発者: $blue{Google}。翻訳やソーシャルメディアのコンテンツ作成など、複雑性の低いタスクに最適です\",\"tooltip\":\"\"}},\"conversationStyleTitle\":\"会話スタイル\",\"conversationStyleDescription\":\"課題に最も適した回答スタイルを選択してください。たとえば、詩を書く場合はクリエイティブ、コードを書く場合は正確な回答スタイルを選択してください。\",\"conversationStyleValues\":{\"1\":\"より$blue{クリエイティブ}\",\"0.7\":\"より$blue{バランスのとれた}\",\"0.2\":\"より$blue{正確な}\"},\"dialogueContextTitle\":\"ダイアログ コンテキスト\",\"dialogueContextDescription\":\"ダイアログコンテキストをボットに渡せるようにする。Premium で使用可能\",\"contextSizeTitle\":\"コンテキスト サイズ\",\"contextSizeDescription\":\"ボットに渡すコンテキストのサイズを選択します\",\"contextSizeSymbols\":\"個のシンボル\",\"contextSizeWords\":\"個の単語\",\"contextSizeHint\":\"費やされた単語数はおおよその計算であり、言語、人工知能モデル、添付ファイルによって異なります\",\"claudeUrl\":\"https://claude.talkai.info/ja/\",\"geminiUrl\":\"https://gemini.talkai.info/ja/\"}}');
+</script>
+<div class="chat row">
+    <div class="chat__mobile row">
+        <a class="logo" href="/ja/"><img src="/files/lg1svg.svg" alt=""></a>        <div class="menu-chat-trigger">
+            <div></div>
+            <div></div>
+            <div></div>
         </div>
-    </nav>
+    </div>
+    <div class="chat-menu" id="main-menu">
+        <div class="menu-logo row row-space">
+            <a href="/ja/"><img src="/files/lg1svg.svg" alt=""></a>            <div class="menu-logo--trigger">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-xs-12 col-sm-8">
-                <h2>URLをQRコードに変換</h2>
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h4>データ入力</h4>
-                    </div>
-                    <div class="panel-body">
-                        <form onSubmit="return false;">
-                            <div class="form-group">
-                                <label for="txtdata">URL</label>
-                                <input type="url" id="txtdata" class="form-control" placeholder="https://">
-                            </div>
-                            <button type="submit" class="btn btn-primary">作成する</button>
-                        </form>
-                    </div>
-                </div>
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h4>QRコード画像の調整</h4>
-                    </div>
-                    <div class="panel-body">
-                        <p>サイズや色などは、このステップで設定します。</p>
-                    </div>
+<div class="chat-menu__all chat-menu__all-desc">
+    <div class="close">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_127_231)">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M32.1386 11.3969C32.9197 10.6158 32.9197 9.34952 32.1386 8.56847L31.4315 7.86136C30.6504 7.08031 29.3841 7.08031 28.6031 7.86136L19.9999 16.4645L11.3967 7.86136C10.6157 7.08032 9.34933 7.08032 8.56828 7.86136L7.86118 8.56847C7.08013 9.34952 7.08013 10.6158 7.86118 11.3969L16.4644 20.0001L7.86127 28.6032C7.08022 29.3842 7.08022 30.6505 7.86127 31.4316L8.56838 32.1387C9.34943 32.9197 10.6158 32.9197 11.3968 32.1387L19.9999 23.5356L28.603 32.1387C29.384 32.9197 30.6504 32.9197 31.4314 32.1387L32.1385 31.4316C32.9196 30.6505 32.9196 29.3842 32.1385 28.6032L23.5354 20.0001L32.1386 11.3969Z"
+                    fill="#00C2FF" />
+            </g>
+            <defs>
+                <clipPath id="clip0_127_231">
+                    <rect width="40" height="40" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+    </div>
+    <a href="/ja/faq/" class="active">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_127_587)">
+                <path
+                    d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM12.01 18C11.31 18 10.75 17.44 10.75 16.74C10.75 16.03 11.31 15.49 12.01 15.49C12.72 15.49 13.26 16.03 13.26 16.74C13.25 17.43 12.72 18 12.01 18ZM15.02 10.6C14.26 11.71 13.54 12.06 13.15 12.77C13.0652 12.9237 13.0085 13.0493 12.9739 13.2718C12.8968 13.7684 12.5226 14.18 12.02 14.18C11.5174 14.18 11.0776 13.7714 11.1183 13.2705C11.1467 12.9214 11.224 12.5468 11.42 12.2C11.91 11.33 12.84 10.81 13.38 10.04C13.95 9.23 13.63 7.71 12.01 7.71C11.3948 7.71 10.9615 7.97947 10.6632 8.33856C10.3299 8.73964 9.7968 9.0147 9.31678 8.81106C8.88969 8.62987 8.66493 8.14283 8.90272 7.74448C9.49634 6.75005 10.5606 6 11.99 6C13.47 6 14.48 6.67 15 7.52C15.44 8.24 15.7 9.59 15.02 10.6Z"
+                    fill="#0D1524" />
+            </g>
+            <defs>
+                <clipPath id="clip0_127_587">
+                    <rect width="24" height="24" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+        <span>F.A.Q.</span>
+    </a>
+    <a href="/ja/blog/">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_127_582)">
+                <path
+                    d="M17.5 4.5C15.8186 4.5 14.0256 4.79741 12.634 5.58456C12.2436 5.80539 11.7564 5.80539 11.366 5.58456C9.97441 4.79741 8.18144 4.5 6.5 4.5C4.72638 4.5 2.82867 4.83091 1.40883 5.71847C1.14356 5.88429 1 6.18375 1 6.49657V20.65C1 21.0688 1.3031 21.1348 1.52404 21.1287C1.67419 21.1245 1.81963 21.0654 1.95674 21.0041C3.29364 20.4061 5.12246 20 6.5 20C8.20472 20 10.0241 20.3057 11.4236 21.1175C11.7838 21.3265 12.2313 21.3488 12.6055 21.1662C14.0009 20.4856 16.0306 20 17.5 20C19.15 20 20.85 20.3 22.25 21.05C22.66 21.26 23 20.86 23 20.6V6.49933C23 6.18495 22.8549 5.88424 22.5878 5.71854C21.1316 4.81543 19.2037 4.5 17.5 4.5ZM21 17.1324C21 17.8092 20.3387 18.2941 19.6718 18.1785C18.963 18.0557 18.2315 18 17.5 18C16.3638 18 14.8925 18.2904 13.6386 18.7367C12.8972 19.0006 12 18.4756 12 17.6887V8.55208C12 8.20847 12.1741 7.88507 12.4801 7.72882C13.8771 7.01557 15.986 6.5 17.5 6.5C18.4482 6.5 19.3964 6.59366 20.2953 6.80564C20.7191 6.90559 21 7.29574 21 7.73122V17.1324Z"
+                    fill="#0D1524" />
+            </g>
+            <defs>
+                <clipPath id="clip0_127_582">
+                    <rect width="24" height="24" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+        <span>ブログ</span>
+    </a>
+    <a href="/ja/contact-us/">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_127_349)">
+                <path
+                    d="M21 6H20C19.4477 6 19 6.44772 19 7V14C19 14.5523 18.5523 15 18 15H7C6.44772 15 6 15.4477 6 16V17C6 17.55 6.45 18 7 18H17.5858C17.851 18 18.1054 18.1054 18.2929 18.2929L20.2929 20.2929C20.9229 20.9229 22 20.4767 22 19.5858V7C22 6.45 21.55 6 21 6ZM17 12V3C17 2.45 16.55 2 16 2H3C2.45 2 2 2.45 2 3V14.5858C2 15.4767 3.07714 15.9229 3.70711 15.2929L5.70711 13.2929C5.89464 13.1054 6.149 13 6.41421 13H16C16.55 13 17 12.55 17 12Z"
+                    fill="#0D1524" />
+            </g>
+            <defs>
+                <clipPath id="clip0_127_349">
+                    <rect width="24" height="24" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+        <span>お問い合わせ</span>
+    </a>
+    <a href="/ja/privacy-policy/">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_127_572)">
+                <path
+                    d="M12.4061 1.18051C12.1476 1.06559 11.8524 1.06559 11.5939 1.18051L3.59386 4.73606C3.23273 4.89656 3 5.25468 3 5.64987V11C3 16.4648 6.72298 21.5805 11.7633 22.9392C11.9182 22.9809 12.0818 22.9809 12.2367 22.9392C17.277 21.5805 21 16.4648 21 11V5.64987C21 5.25468 20.7673 4.89656 20.4061 4.73606L12.4061 1.18051ZM10.7071 16.2929C10.3166 16.6834 9.68342 16.6834 9.29289 16.2929L6.70568 13.7057C6.31594 13.3159 6.31594 12.6841 6.70568 12.2943C7.09489 11.9051 7.72572 11.9045 8.11568 12.293L9.2929 13.4656C9.68364 13.8549 10.3158 13.8542 10.7057 13.4643L15.8804 8.28961C16.2719 7.89811 16.9074 7.89963 17.2975 8.29251C17.6857 8.68343 17.6849 9.31506 17.2954 9.70461L10.7071 16.2929Z"
+                    fill="#0D1524" />
+            </g>
+            <defs>
+                <clipPath id="clip0_127_572">
+                    <rect width="24" height="24" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+        <span>個人情報保護方針</span>
+    </a>
+    <a href="/ja/terms-of-use/">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_127_577)">
+                <path
+                    d="M19 2.99999H14.82C14 2.99999 13.3 2.99994 12 2.99994C10.7 2.99994 10 2.99999 9.18 2.99999H5C3.9 2.99999 3 3.89999 3 4.99999V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V4.99999C21 3.89999 20.1 2.99999 19 2.99999ZM13 17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17C11 16.4477 11.4477 16 12 16C12.5523 16 13 16.4477 13 17ZM13 13C13 13.5523 12.5523 14 12 14C11.4477 14 11 13.5523 11 13V6.99994C11 6.44765 11.4477 5.99994 12 5.99994C12.5523 5.99994 13 6.44765 13 6.99994V13Z"
+                    fill="#0D1524" />
+            </g>
+            <defs>
+                <clipPath id="clip0_127_577">
+                    <rect width="24" height="24" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+        <span>利用規約</span>
+    </a>
+    
+    <a href="/ja/image/">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_74_2642)">
+                            <path
+                                d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.51L14.5 12L19 18H5L8.5 13.5Z"
+                                fill="#00C2FF" />
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_74_2642">
+                                <rect width="24" height="24" fill="white" />
+                            </clipPath>
+                        </defs>
+                    </svg>
+                    <span>イメージジェネレーター</span>
+                </a>
+    <a href="https://play.google.com/store/apps/details?id=com.ai_mnogoseo.talkai" target="_blank">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_127_592)">
+                <path
+                    d="M6 18C6 18.55 6.45 19 7 19H8V22.5C8 23.33 8.67 24 9.5 24C10.33 24 11 23.33 11 22.5V19H13V22.5C13 23.33 13.67 24 14.5 24C15.33 24 16 23.33 16 22.5V19H17C17.55 19 18 18.55 18 18V8H6V18ZM3.5 8C2.67 8 2 8.67 2 9.5V16.5C2 17.33 2.67 18 3.5 18C4.33 18 5 17.33 5 16.5V9.5C5 8.67 4.33 8 3.5 8ZM20.5 8C19.67 8 19 8.67 19 9.5V16.5C19 17.33 19.67 18 20.5 18C21.33 18 22 17.33 22 16.5V9.5C22 8.67 21.33 8 20.5 8ZM15.53 2.16L16.83 0.86C17.03 0.66 17.03 0.35 16.83 0.15C16.63 -0.05 16.32 -0.05 16.12 0.15L14.64 1.63C13.85 1.23 12.95 1 12 1C11.04 1 10.14 1.23 9.34 1.63L7.85 0.15C7.65 -0.05 7.34 -0.05 7.14 0.15C6.94 0.35 6.94 0.66 7.14 0.86L8.45 2.17C6.97 3.26 6 5.01 6 7H18C18 5.01 17.03 3.25 15.53 2.16ZM10 5H9V4H10V5ZM15 5H14V4H15V5Z"
+                    fill="#0D1524" />
+            </g>
+            <defs>
+                <clipPath id="clip0_127_592">
+                    <rect width="24" height="24" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+        <span>アンドロイド用アプリ</span>
+    </a>
+    <!-- <a href="">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M16.7499 0C15.3663 0.0803994 13.7779 0.851206 12.8335 1.8328C11.9803 2.72559 11.3072 4.05154 11.582 5.33433C13.0855 5.37393 14.5947 4.58316 15.4983 3.58357C16.3419 2.64877 16.9815 1.34399 16.7499 0ZM16.8319 5.33199C14.6611 5.33199 13.7535 6.66558 12.2499 6.66558C10.7031 6.66558 9.28913 5.41637 7.41714 5.41637C4.87076 5.41757 1 7.77634 1 13.3335C1 18.3891 5.58115 23.9998 8.16713 23.9998C9.73792 24.0154 10.1187 23.0122 12.2499 23.0014C14.3835 22.9858 14.8439 24.013 16.4171 23.9998C18.1883 23.9866 19.5715 22.0403 20.5819 20.4983C21.3067 19.3943 21.6047 18.8307 22.1662 17.5827C17.9987 16.5267 17.1695 9.80593 22.1662 8.41634C21.2231 6.80716 18.4699 5.33199 16.8319 5.33199Z"
+                fill="#0D1524" />
+        </svg>
+        <span>App for iOS</span>
+    </a>-->
+</div>
+        </div>
+
+        <div class="chat-menu__top" id="chat_buttons"></div>
+
+        <div class="chat-menu__bottom">
+            
+            <a href="https://premium.talkai.info/ja/" target="_blank" class="chat-btnset">
+                <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M15.48 11.35C13.91 7.27 8.32 7.05 9.67 1.12C9.77 0.680003 9.3 0.340003 8.92 0.570003C5.29 2.71 2.68 7 4.87 12.62C5.05 13.08 4.51 13.51 4.12 13.21C2.31 11.84 2.12 9.87 2.28 8.46C2.34 7.94 1.66 7.69 1.37 8.12C0.69 9.16 0 10.84 0 13.37C0.38 18.97 5.11 20.69 6.81 20.91C9.24 21.22 11.87 20.77 13.76 19.04C15.84 17.11 16.6 14.03 15.48 11.35ZM6.2 16.38C7.64 16.03 8.38 14.99 8.58 14.07C8.91 12.64 7.62 11.24 8.49 8.98C8.82 10.85 11.76 12.02 11.76 14.06C11.84 16.59 9.1 18.76 6.2 16.38Z"
+                        fill="#0D1524" />
+                </svg>
+                <span>Premiumを購入する</span>
+            </a>
+            
+            <div id="setting_button"></div>
+
+                          <!--  <a href="/ja/image/" class="chat-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_74_2642)">
+                            <path
+                                d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.51L14.5 12L19 18H5L8.5 13.5Z"
+                                fill="#00C2FF" />
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_74_2642">
+                                <rect width="24" height="24" fill="white" />
+                            </clipPath>
+                        </defs>
+                    </svg>
+                    <span>イメージジェネレーター</span>
+                </a> -->
+
+            
+            <div class="menu__lang row">
+                <img src="/img/flag/ja.svg" alt="" loading="lazy">                <span>日本語</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.66699 5.33333L5.65772 9.07174C6.8587 10.573 9.14196 10.573 10.3429 9.07174L13.3337 5.33333"
+                        stroke="#00FAA9" stroke-width="3" stroke-linecap="round" />
+                </svg>
+                <div class="all-lang">
+                    <a class="all-lang__item row" href="/chat/"><img src="/img/flag/en.svg" alt="" loading="lazy"><span>English</span></a><a class="all-lang__item row" href="/es/chat/"><img src="/img/flag/es.svg" alt="" loading="lazy"><span>Español</span></a><a class="all-lang__item row" href="/pt/chat/"><img src="/img/flag/pt.svg" alt="" loading="lazy"><span>Português</span></a><a class="all-lang__item row" href="/de/chat/"><img src="/img/flag/de.svg" alt="" loading="lazy"><span>Deutsch</span></a><a class="all-lang__item row" href="/it/chat/"><img src="/img/flag/it.svg" alt="" loading="lazy"><span>Italiano</span></a><a class="all-lang__item row" href="/ru/chat/"><img src="/img/flag/ru.svg" alt="" loading="lazy"><span>Русский</span></a><a class="all-lang__item row" href="/fr/chat/"><img src="/img/flag/fr.svg" alt="" loading="lazy"><span>Français</span></a><a class="all-lang__item row" href="/cs/chat/"><img src="/img/flag/cs.svg" alt="" loading="lazy"><span>Čeština</span></a><a class="all-lang__item row" href="/pl/chat/"><img src="/img/flag/pl.svg" alt="" loading="lazy"><span>Polski</span></a><a class="all-lang__item row" href="/tr/chat/"><img src="/img/flag/tr.svg" alt="" loading="lazy"><span>Türkçe</span></a><a class="all-lang__item row" href="/sv/chat/"><img src="/img/flag/sv.svg" alt="" loading="lazy"><span>Svenska</span></a><a class="all-lang__item row" href="/fi/chat/"><img src="/img/flag/fi.svg" alt="" loading="lazy"><span>Suomi</span></a><a class="all-lang__item row" href="/nl/chat/"><img src="/img/flag/nl.svg" alt="" loading="lazy"><span>Nederlands</span></a><a class="all-lang__item row" href="/ro/chat/"><img src="/img/flag/ro.svg" alt="" loading="lazy"><span>Română</span></a><a class="all-lang__item row" href="/bg/chat/"><img src="/img/flag/bg.svg" alt="" loading="lazy"><span>български</span></a><a class="all-lang__item row" href="/da/chat/"><img src="/img/flag/da.svg" alt="" loading="lazy"><span>Dansk</span></a><a class="all-lang__item row" href="/el/chat/"><img src="/img/flag/el.svg" alt="" loading="lazy"><span>Ελληνικά</span></a><a class="all-lang__item row" href="/hu/chat/"><img src="/img/flag/hu.svg" alt="" loading="lazy"><span>Magyar</span></a><a class="all-lang__item row" href="/sk/chat/"><img src="/img/flag/sk.svg" alt="" loading="lazy"><span>Slovenčina</span></a><a class="all-lang__item row" href="/sl/chat/"><img src="/img/flag/sl.svg" alt="" loading="lazy"><span>Slovenščina</span></a><a class="all-lang__item row" href="/lv/chat/"><img src="/img/flag/lv.svg" alt="" loading="lazy"><span>Latviešu valoda</span></a><a class="all-lang__item row" href="/lt/chat/"><img src="/img/flag/lt.svg" alt="" loading="lazy"><span>Lietuviškai</span></a><a class="all-lang__item row" href="/ca/chat/"><img src="/img/flag/ca.svg" alt="" loading="lazy"><span>Català</span></a><a class="all-lang__item row" href="/nb/chat/"><img src="/img/flag/nb.svg" alt="" loading="lazy"><span>Norsk Bokmål</span></a><a class="all-lang__item row" href="/et/chat/"><img src="/img/flag/et.svg" alt="" loading="lazy"><span>Eesti</span></a><a class="all-lang__item row" href="/hr/chat/"><img src="/img/flag/hr.svg" alt="" loading="lazy"><span>Hrvatski</span></a><a class="all-lang__item row" href="/id/chat/"><img src="/img/flag/id.svg" alt="" loading="lazy"><span>Indonesia</span></a><a class="all-lang__item row" href="/ko/chat/"><img src="/img/flag/ko.svg" alt="" loading="lazy"><span>한국어</span></a><a class="all-lang__item row active" href="/ja/chat/"><img src="/img/flag/ja.svg" alt="" loading="lazy"><span>日本語</span></a><a class="all-lang__item row" href="/th/chat/"><img src="/img/flag/th.svg" alt="" loading="lazy"><span>ไทย</span></a><a class="all-lang__item row" href="/vi/chat/"><img src="/img/flag/vi.svg" alt="" loading="lazy"><span>Tiếng Việt</span></a>
                 </div>
             </div>
+        </div>
 
-            <div class="col-xs-12 col-sm-4">
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h4>使いみち</h4>
-                    </div>
-                    <div class="panel-body">
-                        <p>スマートフォンサイトやモバイルページへ集客する目的で使えます。QRコードを読み取ることで、URLの手入力が不要になります。</p>
-                    </div>
-                </div>
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h4>注意事項</h4>
-                    </div>
-                    <div class="panel-body">
-                        <p>生成後は、必ずご自分で読み取り確認・アクセス確認をしましょう。</p>
-                    </div>
-                </div>
-            </div>
+        <div class="chat-sidetrigger">
+            <div></div>
+            <div></div>
+            <div></div>
         </div>
     </div>
 
-    <footer>
-        <div>
-            <p>2004-2025 &copy; <a href="https://qr.quel.jp/" style="color:#fff;">QRコード ジェネレータ</a></p>
+    
+
+<div class="chat-menu__all chat-menu__all--mob">
+    <div class="close">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_127_231)">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M32.1386 11.3969C32.9197 10.6158 32.9197 9.34952 32.1386 8.56847L31.4315 7.86136C30.6504 7.08031 29.3841 7.08031 28.6031 7.86136L19.9999 16.4645L11.3967 7.86136C10.6157 7.08032 9.34933 7.08032 8.56828 7.86136L7.86118 8.56847C7.08013 9.34952 7.08013 10.6158 7.86118 11.3969L16.4644 20.0001L7.86127 28.6032C7.08022 29.3842 7.08022 30.6505 7.86127 31.4316L8.56838 32.1387C9.34943 32.9197 10.6158 32.9197 11.3968 32.1387L19.9999 23.5356L28.603 32.1387C29.384 32.9197 30.6504 32.9197 31.4314 32.1387L32.1385 31.4316C32.9196 30.6505 32.9196 29.3842 32.1385 28.6032L23.5354 20.0001L32.1386 11.3969Z"
+                    fill="#00C2FF" />
+            </g>
+            <defs>
+                <clipPath id="clip0_127_231">
+                    <rect width="40" height="40" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+    </div>
+    <a href="/ja/faq/" class="active">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_127_587)">
+                <path
+                    d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM12.01 18C11.31 18 10.75 17.44 10.75 16.74C10.75 16.03 11.31 15.49 12.01 15.49C12.72 15.49 13.26 16.03 13.26 16.74C13.25 17.43 12.72 18 12.01 18ZM15.02 10.6C14.26 11.71 13.54 12.06 13.15 12.77C13.0652 12.9237 13.0085 13.0493 12.9739 13.2718C12.8968 13.7684 12.5226 14.18 12.02 14.18C11.5174 14.18 11.0776 13.7714 11.1183 13.2705C11.1467 12.9214 11.224 12.5468 11.42 12.2C11.91 11.33 12.84 10.81 13.38 10.04C13.95 9.23 13.63 7.71 12.01 7.71C11.3948 7.71 10.9615 7.97947 10.6632 8.33856C10.3299 8.73964 9.7968 9.0147 9.31678 8.81106C8.88969 8.62987 8.66493 8.14283 8.90272 7.74448C9.49634 6.75005 10.5606 6 11.99 6C13.47 6 14.48 6.67 15 7.52C15.44 8.24 15.7 9.59 15.02 10.6Z"
+                    fill="#0D1524" />
+            </g>
+            <defs>
+                <clipPath id="clip0_127_587">
+                    <rect width="24" height="24" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+        <span>F.A.Q.</span>
+    </a>
+    <a href="/ja/blog/">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_127_582)">
+                <path
+                    d="M17.5 4.5C15.8186 4.5 14.0256 4.79741 12.634 5.58456C12.2436 5.80539 11.7564 5.80539 11.366 5.58456C9.97441 4.79741 8.18144 4.5 6.5 4.5C4.72638 4.5 2.82867 4.83091 1.40883 5.71847C1.14356 5.88429 1 6.18375 1 6.49657V20.65C1 21.0688 1.3031 21.1348 1.52404 21.1287C1.67419 21.1245 1.81963 21.0654 1.95674 21.0041C3.29364 20.4061 5.12246 20 6.5 20C8.20472 20 10.0241 20.3057 11.4236 21.1175C11.7838 21.3265 12.2313 21.3488 12.6055 21.1662C14.0009 20.4856 16.0306 20 17.5 20C19.15 20 20.85 20.3 22.25 21.05C22.66 21.26 23 20.86 23 20.6V6.49933C23 6.18495 22.8549 5.88424 22.5878 5.71854C21.1316 4.81543 19.2037 4.5 17.5 4.5ZM21 17.1324C21 17.8092 20.3387 18.2941 19.6718 18.1785C18.963 18.0557 18.2315 18 17.5 18C16.3638 18 14.8925 18.2904 13.6386 18.7367C12.8972 19.0006 12 18.4756 12 17.6887V8.55208C12 8.20847 12.1741 7.88507 12.4801 7.72882C13.8771 7.01557 15.986 6.5 17.5 6.5C18.4482 6.5 19.3964 6.59366 20.2953 6.80564C20.7191 6.90559 21 7.29574 21 7.73122V17.1324Z"
+                    fill="#0D1524" />
+            </g>
+            <defs>
+                <clipPath id="clip0_127_582">
+                    <rect width="24" height="24" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+        <span>ブログ</span>
+    </a>
+    <a href="/ja/contact-us/">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_127_349)">
+                <path
+                    d="M21 6H20C19.4477 6 19 6.44772 19 7V14C19 14.5523 18.5523 15 18 15H7C6.44772 15 6 15.4477 6 16V17C6 17.55 6.45 18 7 18H17.5858C17.851 18 18.1054 18.1054 18.2929 18.2929L20.2929 20.2929C20.9229 20.9229 22 20.4767 22 19.5858V7C22 6.45 21.55 6 21 6ZM17 12V3C17 2.45 16.55 2 16 2H3C2.45 2 2 2.45 2 3V14.5858C2 15.4767 3.07714 15.9229 3.70711 15.2929L5.70711 13.2929C5.89464 13.1054 6.149 13 6.41421 13H16C16.55 13 17 12.55 17 12Z"
+                    fill="#0D1524" />
+            </g>
+            <defs>
+                <clipPath id="clip0_127_349">
+                    <rect width="24" height="24" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+        <span>お問い合わせ</span>
+    </a>
+    <a href="/ja/privacy-policy/">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_127_572)">
+                <path
+                    d="M12.4061 1.18051C12.1476 1.06559 11.8524 1.06559 11.5939 1.18051L3.59386 4.73606C3.23273 4.89656 3 5.25468 3 5.64987V11C3 16.4648 6.72298 21.5805 11.7633 22.9392C11.9182 22.9809 12.0818 22.9809 12.2367 22.9392C17.277 21.5805 21 16.4648 21 11V5.64987C21 5.25468 20.7673 4.89656 20.4061 4.73606L12.4061 1.18051ZM10.7071 16.2929C10.3166 16.6834 9.68342 16.6834 9.29289 16.2929L6.70568 13.7057C6.31594 13.3159 6.31594 12.6841 6.70568 12.2943C7.09489 11.9051 7.72572 11.9045 8.11568 12.293L9.2929 13.4656C9.68364 13.8549 10.3158 13.8542 10.7057 13.4643L15.8804 8.28961C16.2719 7.89811 16.9074 7.89963 17.2975 8.29251C17.6857 8.68343 17.6849 9.31506 17.2954 9.70461L10.7071 16.2929Z"
+                    fill="#0D1524" />
+            </g>
+            <defs>
+                <clipPath id="clip0_127_572">
+                    <rect width="24" height="24" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+        <span>個人情報保護方針</span>
+    </a>
+    <a href="/ja/terms-of-use/">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_127_577)">
+                <path
+                    d="M19 2.99999H14.82C14 2.99999 13.3 2.99994 12 2.99994C10.7 2.99994 10 2.99999 9.18 2.99999H5C3.9 2.99999 3 3.89999 3 4.99999V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V4.99999C21 3.89999 20.1 2.99999 19 2.99999ZM13 17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17C11 16.4477 11.4477 16 12 16C12.5523 16 13 16.4477 13 17ZM13 13C13 13.5523 12.5523 14 12 14C11.4477 14 11 13.5523 11 13V6.99994C11 6.44765 11.4477 5.99994 12 5.99994C12.5523 5.99994 13 6.44765 13 6.99994V13Z"
+                    fill="#0D1524" />
+            </g>
+            <defs>
+                <clipPath id="clip0_127_577">
+                    <rect width="24" height="24" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+        <span>利用規約</span>
+    </a>
+    
+    <a href="/ja/image/">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_74_2642)">
+                            <path
+                                d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.51L14.5 12L19 18H5L8.5 13.5Z"
+                                fill="#00C2FF" />
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_74_2642">
+                                <rect width="24" height="24" fill="white" />
+                            </clipPath>
+                        </defs>
+                    </svg>
+                    <span>イメージジェネレーター</span>
+                </a>
+    <a href="https://play.google.com/store/apps/details?id=com.ai_mnogoseo.talkai" target="_blank">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_127_592)">
+                <path
+                    d="M6 18C6 18.55 6.45 19 7 19H8V22.5C8 23.33 8.67 24 9.5 24C10.33 24 11 23.33 11 22.5V19H13V22.5C13 23.33 13.67 24 14.5 24C15.33 24 16 23.33 16 22.5V19H17C17.55 19 18 18.55 18 18V8H6V18ZM3.5 8C2.67 8 2 8.67 2 9.5V16.5C2 17.33 2.67 18 3.5 18C4.33 18 5 17.33 5 16.5V9.5C5 8.67 4.33 8 3.5 8ZM20.5 8C19.67 8 19 8.67 19 9.5V16.5C19 17.33 19.67 18 20.5 18C21.33 18 22 17.33 22 16.5V9.5C22 8.67 21.33 8 20.5 8ZM15.53 2.16L16.83 0.86C17.03 0.66 17.03 0.35 16.83 0.15C16.63 -0.05 16.32 -0.05 16.12 0.15L14.64 1.63C13.85 1.23 12.95 1 12 1C11.04 1 10.14 1.23 9.34 1.63L7.85 0.15C7.65 -0.05 7.34 -0.05 7.14 0.15C6.94 0.35 6.94 0.66 7.14 0.86L8.45 2.17C6.97 3.26 6 5.01 6 7H18C18 5.01 17.03 3.25 15.53 2.16ZM10 5H9V4H10V5ZM15 5H14V4H15V5Z"
+                    fill="#0D1524" />
+            </g>
+            <defs>
+                <clipPath id="clip0_127_592">
+                    <rect width="24" height="24" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+        <span>アンドロイド用アプリ</span>
+    </a>
+    <!-- <a href="">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M16.7499 0C15.3663 0.0803994 13.7779 0.851206 12.8335 1.8328C11.9803 2.72559 11.3072 4.05154 11.582 5.33433C13.0855 5.37393 14.5947 4.58316 15.4983 3.58357C16.3419 2.64877 16.9815 1.34399 16.7499 0ZM16.8319 5.33199C14.6611 5.33199 13.7535 6.66558 12.2499 6.66558C10.7031 6.66558 9.28913 5.41637 7.41714 5.41637C4.87076 5.41757 1 7.77634 1 13.3335C1 18.3891 5.58115 23.9998 8.16713 23.9998C9.73792 24.0154 10.1187 23.0122 12.2499 23.0014C14.3835 22.9858 14.8439 24.013 16.4171 23.9998C18.1883 23.9866 19.5715 22.0403 20.5819 20.4983C21.3067 19.3943 21.6047 18.8307 22.1662 17.5827C17.9987 16.5267 17.1695 9.80593 22.1662 8.41634C21.2231 6.80716 18.4699 5.33199 16.8319 5.33199Z"
+                fill="#0D1524" />
+        </svg>
+        <span>App for iOS</span>
+    </a>-->
+</div>
+    <div class="blur"></div>
+    <div class="chat__body">
+        <div class="chat__body__top">
+                                        <h1>ChatGPT</h1>
+                <p>メッセージを入力してチャットを開始します。</p>
+                    </div>
+
+        <div class="chat__wrapper">
+            <div id="app" data-type="chat" data-timers="46;350;600" data-lang="ja" data-action="/ja/chat/send/" data-limit="" data-trylimit="" data-ccount="6"></div>
+
             <div>
-                <span class="qr_share twitter">Twitter</span>
-                <span class="qr_share facebook">Facebook</span>
-                <span class="qr_share line">LINE</span>
+                <div class="chat__banner">
+                    <!-- Send IN -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4633961832836601"
+     data-ad-slot="4164327205"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>                </div>
+            </div>
+
+            <div class="chat__footer">
+                <div id="limit"></div>
+                <div id="form"></div>
+                <span>TalkAI.infoはChatGPTの公式APIを使用していますが、OpenAIの一員ではありません。</span>
             </div>
         </div>
-    </footer>
+    </div>
+</div>
 
-    <script src="https://43koke89.user.webaccel.jp/bootstrap/js/jquery.min.js"></script>
-    <script src="https://43koke89.user.webaccel.jp/bootstrap/js/bootstrap.min.js"></script>
+
+<div class="accept hidden" id="consent-banner">
+	<span>当社のウェブサイトを利用することにより、お客様は当社の｛link｝に同意したものとみなされます</span>
+	<a class="btn" id="accept-btn">受け入れる</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script src="/assets/8999a7b1/js/chat.js"></script>
+<script type="module" src="/assets/8999a7b1/js/index.js"></script>
+<script src="/assets/fb9f9838/jquery.js"></script>
+<script src="/assets/8999a7b1/js/swiper-bundle.min.js"></script>
+<script src="/assets/8999a7b1/js/ion.rangeSlider.min.js"></script>
+<script src="/assets/8999a7b1/js/app.js"></script>
+<script>
+function showBanner(){
+    const consentBanner = document.getElementById("consent-banner");
+    consentBanner.classList.remove('hidden');
+}
+
+function hideBanner(){
+    localStorage.setItem("term-of-use-accepted", 'yes');
+    const consentBanner = document.getElementById("consent-banner");
+    consentBanner.classList.add('hidden');
+    consentBanner.remove();
+}
+
+function initializeBanner(){
+    let isAccepted = localStorage.getItem("term-of-use-accepted");
+    if(isAccepted === null)
+    {
+        localStorage.setItem("term-of-use-accepted", 'no');
+        showBanner();
+    }
+    if(isAccepted !== 'yes'){
+        showBanner();
+    }
+}
+
+const accentBtn = document.getElementById("accept-btn");
+accentBtn && accentBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    hideBanner();
+});
+document.addEventListener('DOMContentLoaded', (event) => {
+    initializeBanner();
+});
+
+</script>
 </body>
+
 </html>
