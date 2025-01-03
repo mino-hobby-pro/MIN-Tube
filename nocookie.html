@@ -1,84 +1,13 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="utf-8" />
-    <meta name="description" content="Modern Blocky Paint" />
-    <meta name="keywords" content="Modern Blocky Paint, play Modern Blocky Paint, unblocked" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Modern Blocky Paint | PLAYHYDRA</title>
-    <link href="../../assets/css/style.css" rel="stylesheet" type="text/css" />
-    <style>
-        body {
-            font-family: 'Roboto Mono', monospace;
-            background-color: #161515;
-            color: #b03232;
-            text-align: center;
-        }
-        h1 {
-            font-size: 50px;
-        }
-        iframe {
-            width: 100%;
-            height: 660px;
-            border: none;
-        }
-        #chat-container {
-            margin-top: 20px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        #messages {
-            height: 300px;
-            overflow-y: scroll;
-            border: 1px solid #b03232;
-            margin-bottom: 10px;
-            padding: 10px;
-            background: white;
-            color: black;
-        }
-        #message-input {
-            width: calc(100% - 22px);
-            padding: 10px;
-            border: 1px solid #b03232;
-            border-radius: 4px;
-        }
-        #send-button {
-            background-color: #b03232;
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            margin-left: 5px;
-        }
-        #send-button:hover {
-            background-color: #892929;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="nav-container">
-       
-        <nav>
-            <a href="/" class="nav-item">HOME</a>
-        </nav>
-    </div>
-    <h1>Modern Blocky Paint</h1>
-    <iframe src="https://zayaruzostreetorgan.com/uploads/5/5/6/7/5567194/custom_themes/593675271171586975/modern_blocky_paint_.html" scrolling="no"></iframe>
-    
-    <div id="chat-container">
-        <div id="messages"></div>
-        <input type="text" id="message-input" placeholder="メッセージを入力..." />
-        <button id="send-button">送信</button>
-    </div>
-    
-    <sub><em>BROUGHT TO YOU BY THE STUDENTS OF MMS</em></sub>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Realtime Game</title>
     <script type="module">
         // Firebaseの初期化
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBYO7lc3tTKdNlK1wLjTTpneQL-zkYU3uA",
@@ -93,30 +22,87 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const messagesRef = collection(db, 'messages');
+        const playersCollection = collection(db, 'players');
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const players = {};
 
-        // メッセージの送信
-        document.getElementById('send-button').onclick = async () => {
-            const messageInput = document.getElementById('message-input');
-            const messageText = messageInput.value;
-            if (messageText) {
-                await addDoc(messagesRef, { text: messageText });
-                messageInput.value = ''; // 入力フィールドをクリア
+        // プレイヤーの追加
+        async function addPlayer(playerData) {
+            try {
+                const docRef = await addDoc(playersCollection, playerData);
+                console.log("Player added with ID: ", docRef.id);
+            } catch (e) {
+                console.error("Error adding player: ", e);
             }
-        };
+        }
 
-        // メッセージの取得
-        onSnapshot(messagesRef, (snapshot) => {
-            const messagesDiv = document.getElementById('messages');
-            messagesDiv.innerHTML = ''; // 現在のメッセージをクリア
-            snapshot.forEach((doc) => {
-                const message = doc.data().text;
-                const messageElement = document.createElement('div');
-                messageElement.textContent = message;
-                messagesDiv.appendChild(messageElement);
+        // プレイヤーの取得
+        async function getPlayers() {
+            const querySnapshot = await getDocs(playersCollection);
+            querySnapshot.forEach((doc) => {
+                players[doc.id] = doc.data();
             });
-            messagesDiv.scrollTop = messagesDiv.scrollHeight; // スクロールを最新のメッセージに合わせる
+            drawPlayers();
+        }
+
+        // リアルタイムの監視
+        onSnapshot(playersCollection, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                const playerData = change.doc.data();
+                if (change.type === "added") {
+                    players[change.doc.id] = playerData;
+                }
+                if (change.type === "modified") {
+                    players[change.doc.id] = playerData;
+                }
+                if (change.type === "removed") {
+                    delete players[change.doc.id];
+                }
+                drawPlayers();
+            });
         });
+
+        // プレイヤーの動きの更新
+        async function updatePlayerPosition(playerId, newPosition) {
+            const playerRef = doc(db, "players", playerId);
+            await updateDoc(playerRef, {
+                position: newPosition
+            });
+        }
+
+        // プレイヤーを描画
+        function drawPlayers() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (const playerId in players) {
+                const player = players[playerId];
+                ctx.fillStyle = 'blue';
+                ctx.fillRect(player.position.x, player.position.y, 10, 10);
+            }
+        }
+
+        // ゲームの初期化
+        window.onload = async () => {
+            // プレイヤーの初期データ
+            const playerData = {
+                position: { x: Math.random() * canvas.width, y: Math.random() * canvas.height }
+            };
+            await addPlayer(playerData);
+            getPlayers();
+
+            // プレイヤーの動きのシミュレーション（ランダムに動く）
+            setInterval(() => {
+                const playerId = Object.keys(players)[0]; // 最初のプレイヤーを動かす
+                const newPosition = {
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height
+                };
+                updatePlayerPosition(playerId, newPosition);
+            }, 1000);
+        };
     </script>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600" style="border:1px solid #000000;"></canvas>
 </body>
 </html>
