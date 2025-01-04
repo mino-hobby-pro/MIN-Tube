@@ -201,7 +201,7 @@
     </div>
 
     <script>
-        let pageToken = '';
+   let pageToken = '';
         let isLoading = false;
 
         document.getElementById('searchForm').addEventListener('submit', function(event) {
@@ -217,20 +217,12 @@
             }
         });
 
-        document.getElementById('searchText').addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                document.getElementById('searchForm').dispatchEvent(new Event('submit'));
-            }
-        });
-
         function fetchResults() {
             isLoading = true;
             const searchText = document.getElementById('searchText').value;
             const maxResults = 5;
 
             document.getElementById('searchButton').disabled = true;
-            document.getElementById('searchButton').style.backgroundColor = '#888';
             document.getElementById('loading').style.display = 'block';
 
             fetch(`https://script.google.com/macros/s/AKfycbzWc0hJTG9R0FzFYqsWHozGgwUTNcZK_5QptkngzKHQsPExpmYUuBH22W7ZuRWSh5g/exec?text=${encodeURIComponent(searchText)}&q=${encodeURIComponent(maxResults)}&pageToken=${encodeURIComponent(pageToken)}`)
@@ -239,29 +231,27 @@
                     document.getElementById('loading').style.display = 'none';
                     isLoading = false;
                     document.getElementById('searchButton').disabled = false;
-                    document.getElementById('searchButton').style.backgroundColor = '#ff6600';
 
                     if (data.results) {
                         data.results.forEach(video => {
                             const videoElement = document.createElement('div');
-                            videoElement.className = 'video';
+                            videoElement.className = 'video-card';
                             videoElement.innerHTML = `
                                 <a href="javascript:void(0);" onclick="redirectToDownload('${video.videoId}')">
-                                    <img src="https://img.youtube.com/vi/${video.videoId}/default.jpg" alt="${video.title}" class="thumbnail">
+                                    <img src="https://img.youtube.com/vi/${video.videoId}/default.jpg" alt="${video.title}">
+                                    <div class="info">
+                                        <h2>${video.title}</h2>
+                                        <p>${video.description}</p>
+                                        <p>公開日: ${new Date(video.publishedAt).toLocaleDateString()}</p>
+                                        <p>チャンネル: ${video.channelTitle}</p>
+                                    </div>
                                 </a>
-                                <div class="info">
-                                    <h2>${video.title}</h2>
-                                    <p>${video.description}</p>
-                                    <p>公開日: ${new Date(video.publishedAt).toLocaleDateString()}</p>
-                                    <p>チャンネル: ${video.channelTitle}</p>
-                                </div>
                             `;
                             document.getElementById('results').appendChild(videoElement);
                         });
                         pageToken = data.nextPageToken || '';
                     } else {
-                        // 代替検索を行う
-                        fetchFromAlternativeAPI(searchText);
+                        document.getElementById('results').innerHTML = '<p>結果が見つかりませんでした</p>';
                     }
                 })
                 .catch(error => {
@@ -269,10 +259,10 @@
                     document.getElementById('loading').style.display = 'none';
                     isLoading = false;
                     document.getElementById('searchButton').disabled = false;
-                    document.getElementById('searchButton').style.backgroundColor = '#ff6600';
                     document.getElementById('results').innerHTML = '<p>エラーが発生しました。再試行してください。</p>';
                 });
         }
+
 
         function fetchFromAlternativeAPI(searchText) {
             fetch(`/api/search?q=${encodeURIComponent(searchText)}`)
