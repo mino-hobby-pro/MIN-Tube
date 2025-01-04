@@ -122,44 +122,71 @@ def search():
     return jsonify({'results': results})
 
 def get_search(q, page):
-    # 代替APIからの検索ロジックを実装
-    t = json.loads(apirequest(fr"api/v1/search?q={urllib.parse.quote(q)}&page={page}&hl=jp"))
-    
-    def load_search(i):
-        if i["type"] == "video":
-            return {
-                "title": i["title"],
-                "id": i["videoId"],
-                "authorId": i["authorId"],
-                "author": i["author"],
-                "length": str(datetime.timedelta(seconds=i["lengthSeconds"])),
-                "published": i["publishedText"],
-                "type": "video"
-            }
-        elif i["type"] == "playlist":
-            return {
-                "title": i["title"],
-                "id": i["playlistId"],
-                "thumbnail": i["videos"][0]["videoId"],
-                "count": i["videoCount"],
-                "type": "playlist"
-            }
-        else:
-            if i["authorThumbnails"][-1]["url"].startswith("https"):
-                return {
-                    "author": i["author"],
-                    "id": i["authorId"],
-                    "thumbnail": i["authorThumbnails"][-1]["url"],
-                    "type": "channel"
-                }
-            else:
-                return {
-                    "author": i["author"],
-                    "id": i["authorId"],
-                    "thumbnail": r"https://" + i["authorThumbnails"][-1]["url"],
-                    "type": "channel"
-                }
-    return [load_search(i) for i in t]
+    global logs
+    results = []
+
+    api_urls = [
+        "https://invidious.jing.rocks/",
+        "https://invidious.nerdvpn.de/",
+        "https://inv.nadeko.net/",
+        "https://inv.zzls.xyz/",
+        "https://inv.vern.cc/",
+        "https://invi.susurrando.com/",
+        "https://invidious.epicsite.xyz/",
+        "https://invidious.esmailelbob.xyz/",
+        "https://invidious.garudalinux.org/",
+        "https://invidious.kavin.rocks/",
+        "https://invidious.lidarshield.cloud/"
+    ]
+
+    # 各APIに順にリクエストを送信
+    for api_url in api_urls:
+        try:
+            response = requests.get(f"{api_url}api/v1/search?q={urllib.parse.quote(q)}&page={page}&hl=jp", headers={'User-Agent': getRandomUserAgent()})
+            response.raise_for_status()  # ステータスコードが200でない場合、例外を発生させる
+            t = response.json()
+            
+            # 検索結果の処理
+            for i in t:
+                if i["type"] == "video":
+                    results.append({
+                        "title": i["title"],
+                        "id": i["videoId"],
+                        "authorId": i["authorId"],
+                        "author": i["author"],
+                        "length": str(datetime.timedelta(seconds=i["lengthSeconds"])),
+                        "published": i["publishedText"],
+                        "type": "video"
+                    })
+                elif i["type"] == "playlist":
+                    results.append({
+                        "title": i["title"],
+                        "id": i["playlistId"],
+                        "thumbnail": i["videos"][0]["videoId"],
+                        "count": i["videoCount"],
+                        "type": "playlist"
+                    })
+                else:
+                    if i["authorThumbnails"][-1]["url"].startswith("https"):
+                        results.append({
+                            "author": i["author"],
+                            "id": i["authorId"],
+                            "thumbnail": i["authorThumbnails"][-1]["url"],
+                            "type": "channel"
+                        })
+                    else:
+                        results.append({
+                            "author": i["author"],
+                            "id": i["authorId"],
+                            "thumbnail": "https://" + i["authorThumbnails"][-1]["url"],
+                            "type": "channel"
+                        })
+            return results  # 成功した場合、結果を返す
+        except requests.exceptions.RequestException:
+            continue  # エラーが発生した場合、次のAPIに進む
+
+    return []  # すべてのAPIに失敗した場合、空のリストを返す
+
 
 @app.route('/nocookie')
 def nocookie():
