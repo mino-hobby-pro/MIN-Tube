@@ -129,14 +129,7 @@ def get_search(q, page):
         "https://invidious.jing.rocks/",
         "https://invidious.nerdvpn.de/",
         "https://inv.nadeko.net/",
-        "https://inv.zzls.xyz/",
-        "https://inv.vern.cc/",
-        "https://invi.susurrando.com/",
-        "https://invidious.epicsite.xyz/",
-        "https://invidious.esmailelbob.xyz/",
-        "https://invidious.garudalinux.org/",
-        "https://invidious.kavin.rocks/",
-        "https://invidious.lidarshield.cloud/"
+        "https://inv.zzls.xyz/"
     ]
 
     # 各APIに順にリクエストを送信
