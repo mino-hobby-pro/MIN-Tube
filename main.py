@@ -6,6 +6,7 @@ import random
 import urllib.parse
 import ast
 import json
+import datetime
 import time
 
 app = Flask(__name__)
@@ -73,14 +74,17 @@ def fetch_from_invidious(video_id):
         try:
             res = requests.get(api + path, headers={'User-Agent': getRandomUserAgent()})
             if res.status_code == 200:
-                data = res.json()
-                return jsonify({
-                    'title': data['title'],
-                    'description': data['descriptionHtml'],
-                    'thumbnail': data['thumbnail'],
-                    'view_count': data['viewCount'],
-                    'stream_url': data['formatStreams'][0]['url']
-                })
+                if 'application/json' in res.headers.get('Content-Type'):
+                    data = res.json()
+                    return jsonify({
+                        'title': data['title'],
+                        'description': data['descriptionHtml'],
+                        'thumbnail': data['thumbnail'],
+                        'view_count': data['viewCount'],
+                        'stream_url': data['formatStreams'][0]['url']
+                    })
+                else:
+                    continue  # JSON以外のレスポンスの場合、次のAPIに進む
         except Exception as e:
             continue
     return jsonify({'error': '代替APIからの情報取得に失敗しました。'}), 500
@@ -122,7 +126,6 @@ def search():
     return jsonify({'results': results})
 
 def get_search(q, page):
-    global logs
     results = []
 
     api_urls = [
@@ -132,14 +135,15 @@ def get_search(q, page):
         "https://inv.zzls.xyz/"
     ]
 
-    # 各APIに順にリクエストを送信
     for api_url in api_urls:
         try:
             response = requests.get(f"{api_url}api/v1/search?q={urllib.parse.quote(q)}&page={page}&hl=jp", headers={'User-Agent': getRandomUserAgent()})
-            response.raise_for_status()  # ステータスコードが200でない場合、例外を発生させる
-            t = response.json()
+            response.raise_for_status()
+            try:
+                t = response.json()
+            except json.JSONDecodeError:
+                continue  # JSONデコードエラーが発生した場合、次のAPIに進む
             
-            # 検索結果の処理
             for i in t:
                 if i["type"] == "video":
                     results.append({
@@ -160,26 +164,20 @@ def get_search(q, page):
                         "type": "playlist"
                     })
                 else:
-                    if i["authorThumbnails"][-1]["url"].startswith("https"):
-                        results.append({
-                            "author": i["author"],
-                            "id": i["authorId"],
-                            "thumbnail": i["authorThumbnails"][-1]["url"],
-                            "type": "channel"
-                        })
-                    else:
-                        results.append({
-                            "author": i["author"],
-                            "id": i["authorId"],
-                            "thumbnail": "https://" + i["authorThumbnails"][-1]["url"],
-                            "type": "channel"
-                        })
-            return results  # 成功した場合、結果を返す
+                    thumbnail_url = i["authorThumbnails"][-1]["url"]
+                    if not thumbnail_url.startswith("https"):
+                        thumbnail_url = "https://" + thumbnail_url
+                    results.append({
+                        "author": i["author"],
+                        "id": i["authorId"],
+                        "thumbnail": thumbnail_url,
+                        "type": "channel"
+                    })
+            return results
         except requests.exceptions.RequestException:
-            continue  # エラーが発生した場合、次のAPIに進む
+            continue
 
-    return []  # すべてのAPIに失敗した場合、空のリストを返す
-
+    return []
 
 @app.route('/nocookie')
 def nocookie():
