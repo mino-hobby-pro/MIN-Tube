@@ -191,7 +191,7 @@
                     const videoElement = document.createElement('div');
                     videoElement.className = 'video-card';
                     videoElement.innerHTML = `
-                        <a href="javascript:void(0);" onclick="redirectToDownload('${videoId}')">
+                        <a href="javascript:void(0);" onclick="event.preventDefault(); redirectToDownload('${videoId}');">
                             <img src="https://img.youtube.com/vi/${videoId}/default.jpg" alt="${title}" class="thumbnail">
                             <div class="info">
                                 <h2>${title}</h2>
