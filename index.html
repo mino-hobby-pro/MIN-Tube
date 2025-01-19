@@ -27,7 +27,7 @@
             color: #ffffff;
         }
 
-        .video {
+        .video-card {
             margin: 15px 0;
             display: flex;
             align-items: center;
@@ -54,10 +54,6 @@
 
         .gcse-search {
             margin-bottom: 20px;
-        }
-
-        #results {
-            margin-top: 20px;
         }
 
         .video-player {
@@ -151,7 +147,7 @@
 
     <div class="container" id="searchContainer">
         <h1>MIN-Tube</h1>
-        <div class="gcse-search"></div>  <!-- Google CSE で検索ボックスを表示 -->
+        <div class="gcse-search"></div>
         <div id="loading">Loading...</div>
         <div id="results"></div>
     </div>
@@ -174,48 +170,47 @@
     </div>
 
     <script>
-        let isLoading = false;
+        document.getElementById('searchContainer').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // 検索結果を初期化
+            document.getElementById('results').innerHTML = '';
+            handleSearchResults();
+        });
 
-        // Google CSEの検索結果を取得するためのカスタム関数
-        function handleSearchResults(data) {
-            const resultsContainer = document.getElementById('results');
-            resultsContainer.innerHTML = '';
+        function handleSearchResults() {
+            // Google CSE の検索結果を取得
+            const searchResults = document.getElementsByClassName('gsc-results');
+            if (searchResults.length > 0) {
+                const results = searchResults[0].getElementsByClassName('gsc-webResult');
+                Array.from(results).forEach(result => {
+                    const title = result.querySelector('.gsc-title').innerText;
+                    const link = result.querySelector('.gsc-title a').href;
+                    const videoId = extractVideoId(link);
+                    const description = result.querySelector('.gsc-description') ? result.querySelector('.gsc-description').innerText : '';
 
-            if (data.items && data.items.length > 0) {
-                data.items.forEach(video => {
-                    const videoId = extractVideoId(video.link); // 動画IDを抽出する関数
                     const videoElement = document.createElement('div');
-                    videoElement.className = 'video';
+                    videoElement.className = 'video-card';
                     videoElement.innerHTML = `
                         <a href="javascript:void(0);" onclick="redirectToDownload('${videoId}')">
-                            <img src="https://img.youtube.com/vi/${videoId}/default.jpg" alt="${video.title}" class="thumbnail">
+                            <img src="https://img.youtube.com/vi/${videoId}/default.jpg" alt="${title}" class="thumbnail">
+                            <div class="info">
+                                <h2>${title}</h2>
+                                <p>${description}</p>
+                            </div>
                         </a>
-                        <div class="info">
-                            <h2>${video.title}</h2>
-                            <p>${video.snippet}</p>
-                        </div>
                     `;
-                    resultsContainer.appendChild(videoElement);
+                    document.getElementById('results').appendChild(videoElement);
                 });
             } else {
-                resultsContainer.innerHTML = '<p>結果が見つかりませんでした</p>';
+                document.getElementById('results').innerHTML = '<p>結果が見つかりませんでした</p>';
             }
         }
 
-        // 動画IDをリンクから抽出する関数
         function extractVideoId(url) {
-            const videoIdMatch = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-            return videoIdMatch ? videoIdMatch[1] : null;
+            const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n]{11})/;
+            const match = url.match(regex);
+            return match ? match[1] : null;
         }
-
-        // Google CSEの検索結果を表示するためのイベントリスナー
-        window.addEventListener('load', function() {
-            if (window.gcsesearch) {
-                window.gcsesearch.addEventListener('searchComplete', function(event) {
-                    handleSearchResults(event.data);
-                });
-            }
-        });
 
         function redirectToDownload(videoId) {
             document.getElementById('video-id').value = videoId;
@@ -224,7 +219,6 @@
             document.getElementById('downloadContainer').style.display = 'block';
         }
 
-        // Download form submission logic remains unchanged
         document.getElementById('download-form').onsubmit = async function(event) {
             event.preventDefault();
             const videoId = document.getElementById('video-id').value;
