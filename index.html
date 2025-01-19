@@ -52,36 +52,11 @@
             color: #ffffff;
         }
 
-        form {
-            display: flex;
-            justify-content: center;
+        .gcse-search {
             margin-bottom: 20px;
         }
 
-        input[type="text"] {
-            padding: 10px;
-            margin-right: 10px;
-            border: 1px solid #444;
-            border-radius: 5px;
-            flex-grow: 1;
-            background: #333;
-            color: #ffffff;
-        }
-
-        button {
-            padding: 10px 15px;
-            background-color: #ff6600;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:disabled {
-            background-color: #888;
-        }
-
-        #result {
+        #results {
             margin-top: 20px;
         }
 
@@ -166,6 +141,7 @@
             background: #ff6600;
         }
     </style>
+    <script async src="https://cse.google.com/cse.js?cx=c04ec9d20c4264b0d"></script>
 </head>
 <body>
     <div class="nav-arrows">
@@ -175,10 +151,7 @@
 
     <div class="container" id="searchContainer">
         <h1>MIN-Tube</h1>
-        <form id="searchForm">
-            <input type="text" id="searchText" placeholder="動画を検索" required>
-            <button type="submit" id="searchButton">検索</button>
-        </form>
+        <div class="gcse-search"></div>  <!-- Google CSE で検索ボックスを表示 -->
         <div id="loading">Loading...</div>
         <div id="results"></div>
     </div>
@@ -201,99 +174,48 @@
     </div>
 
     <script>
-   let pageToken = '';
         let isLoading = false;
 
-        document.getElementById('searchForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            pageToken = '';
-            document.getElementById('results').innerHTML = '';
-            fetchResults();
-        });
+        // Google CSEの検索結果を取得するためのカスタム関数
+        function handleSearchResults(data) {
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = '';
 
-        window.addEventListener('scroll', function() {
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !isLoading) {
-                fetchResults();
+            if (data.items && data.items.length > 0) {
+                data.items.forEach(video => {
+                    const videoId = extractVideoId(video.link); // 動画IDを抽出する関数
+                    const videoElement = document.createElement('div');
+                    videoElement.className = 'video';
+                    videoElement.innerHTML = `
+                        <a href="javascript:void(0);" onclick="redirectToDownload('${videoId}')">
+                            <img src="https://img.youtube.com/vi/${videoId}/default.jpg" alt="${video.title}" class="thumbnail">
+                        </a>
+                        <div class="info">
+                            <h2>${video.title}</h2>
+                            <p>${video.snippet}</p>
+                        </div>
+                    `;
+                    resultsContainer.appendChild(videoElement);
+                });
+            } else {
+                resultsContainer.innerHTML = '<p>結果が見つかりませんでした</p>';
+            }
+        }
+
+        // 動画IDをリンクから抽出する関数
+        function extractVideoId(url) {
+            const videoIdMatch = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+            return videoIdMatch ? videoIdMatch[1] : null;
+        }
+
+        // Google CSEの検索結果を表示するためのイベントリスナー
+        window.addEventListener('load', function() {
+            if (window.gcsesearch) {
+                window.gcsesearch.addEventListener('searchComplete', function(event) {
+                    handleSearchResults(event.data);
+                });
             }
         });
-
-        function fetchResults() {
-            isLoading = true;
-            const searchText = document.getElementById('searchText').value;
-            const maxResults = 5;
-
-            document.getElementById('searchButton').disabled = true;
-            document.getElementById('loading').style.display = 'block';
-
-            fetch(`https://script.google.com/macros/s/AKfycbzWc0hJTG9R0FzFYqsWHozGgwUTNcZK_5QptkngzKHQsPExpmYUuBH22W7ZuRWSh5g/exec?text=${encodeURIComponent(searchText)}&q=${encodeURIComponent(maxResults)}&pageToken=${encodeURIComponent(pageToken)}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('loading').style.display = 'none';
-                    isLoading = false;
-                    document.getElementById('searchButton').disabled = false;
-
-                    if (data.results) {
-                        data.results.forEach(video => {
-                            const videoElement = document.createElement('div');
-                            videoElement.className = 'video-card';
-                            videoElement.innerHTML = `
-                                <a href="javascript:void(0);" onclick="redirectToDownload('${video.videoId}')">
-                                    <img src="https://img.youtube.com/vi/${video.videoId}/default.jpg" alt="${video.title}">
-                                    <div class="info">
-                                        <h2>${video.title}</h2>
-                                        <p>${video.description}</p>
-                                        <p>公開日: ${new Date(video.publishedAt).toLocaleDateString()}</p>
-                                        <p>チャンネル: ${video.channelTitle}</p>
-                                    </div>
-                                </a>
-                            `;
-                            document.getElementById('results').appendChild(videoElement);
-                        });
-                        pageToken = data.nextPageToken || '';
-                    } else {
-                        document.getElementById('results').innerHTML = '<p>結果が見つかりませんでした</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('エラー:', error);
-                    document.getElementById('loading').style.display = 'none';
-                    isLoading = false;
-                    document.getElementById('searchButton').disabled = false;
-                    document.getElementById('results').innerHTML = '<p>エラーが発生しました。再試行してください。</p>';
-                });
-        }
-
-
-        function fetchFromAlternativeAPI(searchText) {
-            fetch(`/api/search?q=${encodeURIComponent(searchText)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.results) {
-                        data.results.forEach(video => {
-                            const videoElement = document.createElement('div');
-                            videoElement.className = 'video';
-                            videoElement.innerHTML = `
-                                <a href="javascript:void(0);" onclick="redirectToDownload('${video.id}')">
-                                    <img src="https://img.youtube.com/vi/${video.id}/default.jpg" alt="${video.title}" class="thumbnail">
-                                </a>
-                                <div class="info">
-                                    <h2>${video.title}</h2>
-                                    <p>${video.length}</p>
-                                    <p>公開日: ${video.published}</p>
-                                    <p>チャンネル: ${video.author}</p>
-                                </div>
-                            `;
-                            document.getElementById('results').appendChild(videoElement);
-                        });
-                    } else {
-                        document.getElementById('results').innerHTML = '<p>結果が見つかりませんでした</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('代替APIエラー:', error);
-                    document.getElementById('results').innerHTML = '<p>代替APIからの情報取得に失敗しました。</p>';
-                });
-        }
 
         function redirectToDownload(videoId) {
             document.getElementById('video-id').value = videoId;
@@ -302,6 +224,7 @@
             document.getElementById('downloadContainer').style.display = 'block';
         }
 
+        // Download form submission logic remains unchanged
         document.getElementById('download-form').onsubmit = async function(event) {
             event.preventDefault();
             const videoId = document.getElementById('video-id').value;
@@ -326,7 +249,6 @@
 
         // Navigation button functionality
         document.getElementById('prevButton').addEventListener('click', function() {
-            // Logic to go back to the previous screen
             if (document.getElementById('downloadContainer').style.display === 'block') {
                 document.getElementById('downloadContainer').style.display = 'none';
                 document.getElementById('searchContainer').style.display = 'block';
@@ -334,8 +256,6 @@
         });
 
         document.getElementById('nextButton').addEventListener('click', function() {
-            // Logic to go to the next screen (if applicable)
-            // Currently, this does not have a defined next screen
             alert('次の画面は未実装です。');
         });
     </script>
